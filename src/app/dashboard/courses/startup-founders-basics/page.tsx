@@ -1,5 +1,6 @@
 'use client'
 
+import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
 
 // Define course modules
@@ -42,6 +43,95 @@ const modules = [
       content11:
         'Here’s a great example: Nigeria’s Paystack started small with a goal to make online payments in Africa easier. After getting VC funding, Paystack scaled rapidly and, a few years down the road, was bought by Stripe for over $200 million! Paystack’s early investors saw a huge return because they believed in the potential.',
     },
+    lessons: [
+      {
+        title: 'Lesson 1.1: What Is Venture Capital?',
+        desc: 'Read: Zara’s Story & VC Basics',
+        fullDesc:
+          'Begin by revisiting Zara’s moment of realization—how she discovered that VC could turn her app idea into a continent-wide solution. Then, dive into the mechanics:',
+        items: [
+          'VCs raise money from Limited Partners (LPs): Banks, wealthy individuals, and institutions pool funds into a VC firm, which then invests in high-potential startups.',
+          "High risk, high reward: VCs know most startups fail, but they bet on the few that could become 'unicorns' (startups valued at $1B+).",
+          'More than money: VCs provide mentorship, networks, and strategic guidance.',
+        ],
+        example: [
+          'Case Study: Flutterwave’s Rise',
+          'Founded in Nigeria, Flutterwave secured early VC funding to solve Africa’s fragmented payments problem.',
+          'Today, it powers cross-border transactions for businesses globally.',
+        ],
+        assignment: [
+          'Reflection Prompt:',
+          "Think about your own startup or idea. What’s the 'big vision' that could attract a VC’s attention? Write down one sentence that captures why your idea has massive potential.",
+        ],
+      },
+      {
+        title: 'Lesson 1.2: How VC Funding Works in Africa',
+        desc: 'Read: The Realities of Raising VC',
+        fullDesc: 'Not all startups get funded. Here’s why some succeed:',
+        items: [
+          'Scalability: Can your solution grow across Africa (or beyond)?',
+          'Problem-Solution Fit: Are you addressing a painful, urgent need?',
+          'Strong Team: Do you have the skills and grit to execute?',
+        ],
+        example: [
+          'Example: Paystack’s Journey',
+          'Started in Nigeria to simplify online payments.',
+          'Early VC backers saw potential despite Africa’s challenges.',
+          'Acquired by Stripe for $200M+—a win for investors.',
+        ],
+        assignment: [
+          'Assignment: VC Fit Checklist',
+          'Rate your startup on these criteria (1-5 scale):',
+          'Scalability: ___',
+          'Problem-Solution Fit: ___',
+          'Team Strength: ___',
+          'Are you VC-ready? If not, what’s one area to improve?',
+        ],
+      },
+      {
+        title: 'Lesson 1.3: Finding the Right Investors',
+        desc: 'Read: Building Your VC Dream Team',
+        fullDesc:
+          'Zara imagined investors like Sequoia or Ingressive Capital backing her. But how do you find the right fit?',
+        items: [
+          'African VC Firms to Know:',
+          'Ingressive Capital (Nigeria): Backs early-stage tech startups.',
+          'Knife Capital (South Africa): Focuses on scalable innovation.',
+          'MEST Africa (Pan-African): Invests in tech entrepreneurs.',
+        ],
+        example: [
+          'Key Tip:',
+          'Look for investors who:',
+          'Understand your market.',
+          'Have backed similar startups.',
+          'Offer more than just cash (mentorship, networks).',
+        ],
+        assignment: [
+          'Exercise: Investor Research',
+          'Pick one African VC firm and answer:',
+          'What’s one startup they funded that inspires you?',
+          'What’s their investment focus (e.g., fintech, agritech)?',
+        ],
+      },
+    ],
+    modAss: [
+      'Module Assessment: "Your VC Action Plan"',
+      'Final Assignment:',
+      'Investor Wishlist: List 2-3 VC firms or angel investors who align with your startup.',
+      "Pitch Prep: Write a 3-sentence 'elevator pitch' explaining why your startup is VC-worthy.",
+      'Clarity of vision.',
+      'Understanding of investor fit.',
+      'Conviction in scalability.',
+    ],
+    addResouces: [
+      'Additional Resources:',
+      "Reading: 'The Inside Story of Flutterwave’s First Funding Round' (link).",
+      'Glossary: Key terms (LP, unicorn, due diligence).',
+    ],
+    disscForPrompt: [
+      'If you could get funding from one investor today, who would it be and why?',
+      'Share your biggest fear about raising VC—let’s crowdsource advice!',
+    ],
   },
   { title: 'Market Research', content: 'Content of Module 2...' },
   { title: 'Building a Business Plan', content: 'Content of Module 3...' },
@@ -72,17 +162,30 @@ export default function StartupFoundersBasicsPage() {
   return (
     <div className='p-4'>
       <h1 className='text-xl font-semibold'>{currentModule.title}</h1>
-      <p>Duration: {currentModule.duration}</p>
-      <p>Format: {currentModule.Format}</p>
-      <p>Level: {currentModule.level}</p>
-      <p>Description: {currentModule.description}</p>
-      <p>Key Questions We’ll Answer:</p>
+      <p>
+        <span className='font-medium'>Duration:</span> {currentModule.duration}
+      </p>
+      <p>
+        <span className='font-medium'>Format:</span> {currentModule.Format}
+      </p>
+      <p>
+        <span className='font-medium'>Level:</span> {currentModule.level}
+      </p>
+      <Separator className='my-4' />
+      <p>
+        <span className='font-medium'>Description:</span>{' '}
+        {currentModule.description}
+      </p>
+      <p className='font-bold mt-2'>Key Questions We’ll Answer:</p>
       <ul className='list-disc pl-5'>
         {currentModule?.keyQuestions?.map((item, index) => (
           <li key={index}>{item}</li>
         ))}
       </ul>
-      <h1 className='mt-4 text-black'>CASE STORY</h1>
+      <Separator className='my-4' />
+      <h1 className='mt-4 text-black font-semibold text-center text-xl'>
+        CASE STORY
+      </h1>
       <div className='mt-4'>
         {Object.keys(currentModule.content).map(
           (key, index) =>
@@ -93,18 +196,88 @@ export default function StartupFoundersBasicsPage() {
             )
         )}
       </div>
-      <div className='flex gap-4 mt-4'>
+      <Separator className='my-4' />
+      <div>
+        {currentModule?.lessons?.map((item, index) => (
+          <div className='mt-5' key={index}>
+            <p>{item?.title}</p>
+            <p>{item?.desc}</p>
+            <p>{item?.fullDesc}</p>
+            <br />
+            <ul className='list-disc pl-5'>
+              {item?.items?.map((it, index) => (
+                <li key={index}>{it}</li>
+              ))}
+            </ul>
+            <p className='mt-3 font-medium'>Case Study</p>
+            <ul className='list-disc pl-5'>
+              {item?.example?.map((it, index) => (
+                <li key={index}>{it}</li>
+              ))}
+            </ul>
+            <p className='mt-3 font-medium'>Reflection</p>
+            <ul className='list-disc pl-5'>
+              {item?.assignment?.map((it, index) => (
+                <li key={index}>{it}</li>
+              ))}
+            </ul>
+            <Separator className='my-4' />
+          </div>
+        ))}
+      </div>
+      <div>
+        <ul className='list-disc pl-5'>
+          {currentModule?.modAss?.map((item, index) =>
+            index === 0 ? (
+              <p className='font-medium' key={index}>
+                {item}
+              </p>
+            ) : (
+              <li key={index}>{item}</li>
+            )
+          )}
+        </ul>
+      </div>
+      <Separator className='my-4' />
+      <div>
+        <ul className='list-disc pl-5'>
+          {currentModule?.addResouces?.map((item, index) =>
+            index === 0 ? (
+              <p className='font-medium' key={index}>
+                {item}
+              </p>
+            ) : (
+              <li key={index}>{item}</li>
+            )
+          )}
+        </ul>
+      </div>
+      <Separator className='my-4' />
+      <div>
+        <ul className='list-disc pl-5'>
+          {currentModule?.disscForPrompt?.map((item, index) =>
+            index === 0 ? (
+              <p className='font-medium' key={index}>
+                {item}
+              </p>
+            ) : (
+              <li key={index}>{item}</li>
+            )
+          )}
+        </ul>
+      </div>
+      <div className='flex gap-4 mt-4 items-center justify-center'>
         <button
           onClick={previousModule}
           className='px-4 py-2 bg-gray-300 rounded-lg disabled:opacity-50'
-          disabled={currentModuleIndex === 0} // Disable if first module
+          disabled={currentModuleIndex === 0}
         >
           Previous
         </button>
         <button
           onClick={nextModule}
           className='px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50'
-          disabled={currentModuleIndex === modules.length - 1} // Disable if last module
+          disabled={currentModuleIndex === modules.length - 1}
         >
           Next
         </button>
