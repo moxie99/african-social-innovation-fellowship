@@ -191,7 +191,12 @@ export default function StartupFoundersBasicsPage() {
           (key, index) =>
             key !== 'heading' && (
               <p key={index} className='mb-4'>
-                {currentModule.content[key]}
+                {/* Make sure to access the content using a key that exists */}
+                {
+                  currentModule.content[
+                    key as keyof typeof currentModule.content
+                  ]
+                }
               </p>
             )
         )}
