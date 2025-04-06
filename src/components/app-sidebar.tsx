@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/sidebar'
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
+import { useUser } from '@clerk/nextjs'
 
 const data = {
   user: {
@@ -132,7 +133,7 @@ const data = {
   documents: [
     {
       name: 'Startup Founders Basics',
-      url: '#',
+      url: '/dashboard/courses/startup-founders-basics',
       icon: DatabaseIcon,
     },
     // {
@@ -149,6 +150,8 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user, isSignedIn, isLoaded } = useUser()
+  console.log('===)________', user, isSignedIn, isLoaded)
   return (
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>

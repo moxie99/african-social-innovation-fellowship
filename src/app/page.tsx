@@ -7,8 +7,6 @@ import { SiteHeader } from '@/components/site-header'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import data from '../data/data.json'
 export default function Home() {
-  // const { user, isSignedIn, isLoaded } = useUser()
-  // console.log('===)________', user, isSignedIn, isLoaded)
   return (
     <SidebarProvider>
       <AppSidebar variant='inset' />
