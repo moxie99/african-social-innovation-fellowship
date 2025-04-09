@@ -23,6 +23,8 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import Link from 'next/link'
+import { Button } from './ui/button'
+import { useRouter } from 'next/navigation'
 
 export function NavDocuments({
   items,
@@ -34,7 +36,7 @@ export function NavDocuments({
   }[]
 }) {
   const { isMobile } = useSidebar()
-
+  const router = useRouter()
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
       <SidebarGroupLabel>Courses</SidebarGroupLabel>
@@ -64,11 +66,23 @@ export function NavDocuments({
               >
                 <DropdownMenuItem>
                   <FolderIcon />
-                  <span>Open</span>
+                  <Button
+                    onClick={() =>
+                      router.push('/dashboard/courses/startup-founders-basics')
+                    }
+                    variant={'ghost'}
+                  >
+                    Course
+                  </Button>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <ShareIcon />
-                  <span>Share</span>
+                  <Button
+                    onClick={() => router.push('/dashboard/courses/questions')}
+                    variant={'ghost'}
+                  >
+                    Assess.
+                  </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

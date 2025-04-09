@@ -150,8 +150,6 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user, isSignedIn, isLoaded } = useUser()
-  console.log('===)________', user, isSignedIn, isLoaded)
   return (
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>

@@ -2,18 +2,22 @@
 
 import { Separator } from '@/components/ui/separator'
 import { modules } from '@/data/modules'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 // Define course modules
 
 export default function StartupFoundersBasicsPage() {
   // State to track current module
+  const router = useRouter()
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0)
 
   // Function to go to next module
   const nextModule = () => {
     if (currentModuleIndex < modules.length - 1) {
       setCurrentModuleIndex(currentModuleIndex + 1)
+    } else {
+      router.push('/dashboard/courses/questions')
     }
   }
 
@@ -149,10 +153,9 @@ export default function StartupFoundersBasicsPage() {
         <button
           onClick={nextModule}
           className='px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50'
-          disabled={currentModuleIndex === modules.length - 1}
         >
           {currentModuleIndex === modules.length - 1
-            ? 'Take Assessmet'
+            ? 'Take Assessments'
             : 'Next'}
         </button>
       </div>
