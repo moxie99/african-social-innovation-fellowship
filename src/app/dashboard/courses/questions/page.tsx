@@ -5,10 +5,8 @@ import { questions } from '@/data/questions'
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 import jsPDF from 'jspdf'
-import { useUser } from '@clerk/nextjs'
 
 const Questions = () => {
-  const { user, isSignedIn, isLoaded } = useUser()
   const [username, setUsername] = useState('')
   const [storedName, setStoredName] = useState('')
   const [current, setCurrent] = useState(0)
