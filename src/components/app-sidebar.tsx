@@ -30,7 +30,6 @@ import {
 } from '@/components/ui/sidebar'
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
-import { useUser } from '@clerk/nextjs'
 
 const data = {
   user: {
