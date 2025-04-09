@@ -16,6 +16,7 @@ const Questions = () => {
   const [showQuiz, setShowQuiz] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [assessmentCount, setAssessmentCount] = useState(0)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -23,10 +24,12 @@ const Questions = () => {
       const savedName = localStorage.getItem('vc_quiz_name')
       const savedAnswers = localStorage.getItem('vc_quiz_answers')
       const savedCurrent = localStorage.getItem('vc_quiz_current')
+      const savedAssessmentCount = localStorage.getItem('vc_quiz_count')
 
       if (savedName) setStoredName(savedName)
       if (savedAnswers) setAnswers(JSON.parse(savedAnswers))
       if (savedCurrent) setCurrent(Number(savedCurrent))
+      if (savedAssessmentCount) setAssessmentCount(Number(savedAssessmentCount))
       setLoading(false)
     }
   }, [])
@@ -37,7 +40,7 @@ const Questions = () => {
       localStorage.setItem('vc_quiz_answers', JSON.stringify(answers))
       localStorage.setItem('vc_quiz_current', String(current))
     }
-  }, [answers, current]) // Run this when answers or current changes
+  }, [answers, current, assessmentCount]) // Run this when answers or current changes
 
   const handleStart = () => {
     setStoredName(username)
@@ -57,6 +60,9 @@ const Questions = () => {
       (q) => answers[q.number] === q.answer
     ).length
 
+    // Increment assessment count
+    const newAssessmentCount = assessmentCount + 1
+    setAssessmentCount(newAssessmentCount)
     if (correct >= 1) {
       const doc = new jsPDF()
       doc.text(`Certificate of Completion`, 20, 30)
@@ -174,6 +180,7 @@ const Questions = () => {
                 😢 You did not meet the passing mark. Please retake the quiz.
               </p>
             )}
+            <p>You have taken this quiz {assessmentCount} times.</p>
             {correct < 1 ? (
               <Button onClick={handleRetake} className='w-full'>
                 Retake Assessment
