@@ -140,7 +140,7 @@ export default function ModulePage() {
         <span className='font-medium'>Description:</span>{' '}
         {moduleData.description}
       </p>
-      <p className='font-bold mt-2'>Key Questions We'll Answer:</p>
+      <p className='font-bold mt-2'>Key Questions We&apos;ll Answer:</p>
       <ul className='list-disc pl-5'>
         {moduleData?.keyQuestions?.map((item, index) => (
           <li key={index}>{item}</li>
