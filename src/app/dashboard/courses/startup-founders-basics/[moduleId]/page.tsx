@@ -137,7 +137,7 @@ export default function ModulePage() {
       </div>
       <Separator className='my-4' />
       <p>
-        <span className='font-medium'>Description:</span>{' '}
+        <span className='font-medium'>Description:</span>
         {moduleData.description}
       </p>
       <p className='font-bold mt-2'>Key Questions We&apos;ll Answer:</p>
