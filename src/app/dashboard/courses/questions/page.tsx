@@ -1,10 +1,14 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { questions } from '@/data/questions'
+import { questions as fullArray } from '@/data/questions'
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 import jsPDF from 'jspdf'
+import { getRandomQuestionsRenumbered } from '@/helpers/randomQuestions'
+import Confetti from 'react-confetti'
+import useWindowSize from 'react-use/lib/useWindowSize'
+import { useRouter } from 'next/navigation'
 
 const Questions = () => {
   const [username, setUsername] = useState('')
@@ -16,9 +20,11 @@ const Questions = () => {
   const [loading, setLoading] = useState(true)
   const [assessmentCount, setAssessmentCount] = useState(0)
 
+  const router = useRouter()
+  const { width, height } = useWindowSize()
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Only run this code in the client side
       const savedName = localStorage.getItem('vc_quiz_name')
       const savedAnswers = localStorage.getItem('vc_quiz_answers')
       const savedCurrent = localStorage.getItem('vc_quiz_current')
@@ -34,19 +40,21 @@ const Questions = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Only run this code in the client side
       localStorage.setItem('vc_quiz_answers', JSON.stringify(answers))
       localStorage.setItem('vc_quiz_current', String(current))
     }
-  }, [answers, current, assessmentCount]) // Run this when answers or current changes
+  }, [answers, current, assessmentCount])
 
   const handleStart = () => {
     setStoredName(username)
     if (typeof window !== 'undefined') {
       localStorage.setItem('vc_quiz_name', username)
+      // Refresh the page after setting the name
+      window.location.reload()
     }
-    setShowQuiz(true)
   }
+
+  const questions = getRandomQuestionsRenumbered(fullArray, 100)
 
   const handleOption = (letter: string) => {
     setAnswers({ ...answers, [questions[current].number]: letter })
@@ -58,31 +66,30 @@ const Questions = () => {
       (q) => answers[q.number] === q.answer
     ).length
 
-    // Increment assessment count
     const newAssessmentCount = assessmentCount + 1
     setAssessmentCount(newAssessmentCount)
-    if (correct >= 1) {
+    if (correct >= 70) {
       const doc = new jsPDF()
       doc.text(`Certificate of Completion`, 20, 30)
       doc.text(`Awarded to: ${storedName}`, 20, 50)
       doc.text(`Score: ${correct}/100`, 20, 70)
       doc.save(`${storedName}_certificate.pdf`)
     }
+    router.push('/dashboard/courses/certifcate')
   }
+
   const handleRetake = () => {
-    // Reset quiz state to retake the quiz
     setAnswers({})
     setCurrent(0)
     setSubmitted(false)
     setShowQuiz(true)
-    // Reload the page to reset the state
     window.location.reload()
   }
+
   const q = questions[current]
   const selected = answers[q.number]
 
   if (loading) {
-    // Show a loading state while the component is loading
     return <div>Loading...</div>
   }
 
@@ -105,38 +112,35 @@ const Questions = () => {
       </div>
     )
   }
+
   const correct = questions.filter((q) => answers[q.number] === q.answer).length
   return (
     <Dialog open={storedName ? !showQuiz || submitted : showQuiz || submitted}>
-      <DialogContent className='w-full max-w-[90vw] max-h-[90vh] overflow-auto py-10'>
+      <DialogContent className='w-[95%] md:w-[85%] lg:w-[75%] max-w-4xl mx-auto min-h-[200px] max-h-[85vh] overflow-y-auto p-4 md:p-6 lg:p-8'>
         {!submitted ? (
           <div className='space-y-4'>
             <DialogHeader>
               <h2 className='text-2xl font-bold'>
-                {q.number < 100
-                  ? 'TYPE A'
-                  : q.number >= 101 && q.number < 201
-                  ? 'TYPE B'
-                  : q.number >= 201 && q.number < 301
-                  ? 'TYPE C'
-                  : 'TYPE D'}
+                {q.number < questions.length ? 'ASSESSMENT' : 'FINAL QUESTION'}
               </h2>
               <h2 className='text-lg font-semibold'>Question {q.number}</h2>
-              <p>{q.question}</p>
+              <p className='text-base md:text-lg whitespace-pre-wrap'>
+                {q.question}
+              </p>
             </DialogHeader>
             <div className='space-y-2'>
               {Object.entries(q.options).map(([key, text]) => (
                 <Button
                   key={key}
                   variant={selected === key ? 'default' : 'outline'}
-                  className='w-full justify-start'
+                  className='w-full justify-start text-left whitespace-normal h-auto py-3'
                   onClick={() => handleOption(key)}
                 >
                   {key}. {text}
                 </Button>
               ))}
             </div>
-            <div className='flex justify-between'>
+            <div className='flex justify-between mt-6'>
               <Button
                 onClick={() => setCurrent(current - 1)}
                 disabled={current === 0}
@@ -149,13 +153,7 @@ const Questions = () => {
                   onClick={() => setCurrent(current + 1)}
                   disabled={!selected}
                 >
-                  {q.number === 100
-                    ? 'Start Type B Questions'
-                    : q.number === 200
-                    ? 'Start Type C Questions'
-                    : q.number === 300
-                    ? 'Start Type D Questions'
-                    : 'Next'}
+                  {q.number === 100 ? 'SUBMIT' : 'Next'}
                 </Button>
               ) : (
                 <Button onClick={handleSubmit} disabled={!selected}>
@@ -166,12 +164,13 @@ const Questions = () => {
           </div>
         ) : (
           <div className='text-center space-y-4'>
+            <Confetti width={width} height={height} recycle={false} />
             <h2 className='text-xl font-semibold'>Quiz Completed!</h2>
             <p>Thank you, {storedName}. Your responses have been recorded.</p>
             <p>
               Score: {correct} / {questions.length}
             </p>
-            {correct >= 1 ? (
+            {correct >= 70 ? (
               <p>🎉 You passed! Certificate has been downloaded.</p>
             ) : (
               <p>
@@ -179,7 +178,7 @@ const Questions = () => {
               </p>
             )}
             <p>You have taken this quiz {assessmentCount} times.</p>
-            {correct < 1 ? (
+            {correct < 70 ? (
               <Button onClick={handleRetake} className='w-full'>
                 Retake Assessment
               </Button>

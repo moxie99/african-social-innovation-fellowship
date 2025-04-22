@@ -1,5 +1,10 @@
+import { BookIcon } from 'lucide-react'
+
 export const modules = [
   {
+    id: 'Module 1',
+    url: '/dashboard/courses/startup-founders-basics/module-1',
+    icon: BookIcon,
     title:
       'MODULE 1: DREAM BIG, FUND SMART – INTRODUCTION TO VENTURE CAPITAL FOR AFRICAN FOUNDERS',
     duration: '2 Weeks',
@@ -128,6 +133,9 @@ export const modules = [
     ],
   },
   {
+    id: 'Module 2',
+    url: '/dashboard/courses/startup-founders-basics/module-2',
+    icon: BookIcon,
     title: 'MODULE 2: INSIDE A VC FIRM – DEALS,FEES & WHO CALLS THE SHOTS',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
@@ -283,6 +291,9 @@ Let’s say Startup A becomes wildly successful, offering healthcare solutions t
     ],
   },
   {
+    id: 'Module 3',
+    url: '/dashboard/courses/startup-founders-basics/module-3',
+    icon: BookIcon,
     title: 'MODULE 3:  The Ups and Downs of VC Funding;',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
@@ -501,6 +512,9 @@ Loss of Control
     ],
   },
   {
+    id: 'Module 4',
+    url: '/dashboard/courses/startup-founders-basics/module-4',
+    icon: BookIcon,
     title: 'MODULE 4: VC FIRMS DECODED – STRATEGIES THAT BUILD UNICORNS',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
@@ -667,6 +681,9 @@ Whether through First Round’s community building, Benchmark’s concentrated a
     ],
   },
   {
+    id: 'Module 5',
+    url: '/dashboard/courses/startup-founders-basics/module-5',
+    icon: BookIcon,
     title: 'MODULE 5: VC JOURNEY SIMULATOR –FROM SEED TO EXIT',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
@@ -861,6 +878,9 @@ Map your startup’s hypothetical funding path:`,
     ],
   },
   {
+    id: 'Module 6',
+    url: '/dashboard/courses/startup-founders-basics/module-6',
+    icon: BookIcon,
     title:
       'MODULE 6: LEVERAGED BUYOUTS (LBOS) –SCALING BUSINESSES WITH SMART DEBT',
     duration: '2 Weeks',
@@ -1082,6 +1102,9 @@ Pick a real or hypothetical African business and outline an LBO plan:`,
     ],
   },
   {
+    id: 'Module 7',
+    url: '/dashboard/courses/startup-founders-basics/module-7',
+    icon: BookIcon,
     title: `MODULE 7: PRIVATE EQUITY
 DECONSTRUCTED – FUNDS, FEES &
 FUTURE EMPIRES
@@ -1392,6 +1415,9 @@ Create a 1-page fund prospectus outlining:
     ],
   },
   {
+    id: 'Module 8',
+    url: '/dashboard/courses/startup-founders-basics/module-8',
+    icon: BookIcon,
     title:
       'MODULE 8: LBOs IN ACTION – AFRICAN CASE STUDIES & FUTURE PLAYBOOK :  Section: Private Equity Strategies',
     duration: '2 Weeks',
@@ -1650,6 +1676,9 @@ The best LBOs don’t just extract value—they build legacies.
     ],
   },
   {
+    id: 'Module 9',
+    url: '/dashboard/courses/startup-founders-basics/module-9',
+    icon: BookIcon,
     title:
       'MODULE 9: SPACS UNLOCKED – THE FAST TRACK TO GOING PUBLIC Section: Special Purpose Acquisition Companies (SPACs)',
 
@@ -1887,6 +1916,9 @@ Imagine you’re launching a SPAC to acquire an African startup. Create a 1-page
     ],
   },
   {
+    id: 'Module 10',
+    url: '/dashboard/courses/startup-founders-basics/module-10',
+    icon: BookIcon,
     title: `MODULE 2: SPAC CASE STUDY – HOW
 JUMIA REWROTE AFRICA’S TECH
 PLAYBOOK 
@@ -2138,6 +2170,9 @@ Compare two paths for a fictional African startup:
     ],
   },
   {
+    id: 'Module 11',
+    url: '/dashboard/courses/startup-founders-basics/module-11',
+    icon: BookIcon,
     title: `MODULE 3: SPAC PITFALLS & POWER –
 LESSONS FROM WEJO’S COLLAPSE
 Section: Special Purpose Acquisition Companies (SPACs)

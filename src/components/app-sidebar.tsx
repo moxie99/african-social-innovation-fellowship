@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/sidebar'
 import { NavMain } from './nav-main'
 import { NavUser } from './nav-user'
+import { modules } from '@/data/modules'
 
 const data = {
   user: {
@@ -134,6 +135,7 @@ const data = {
       name: 'Startup Founders Basics',
       url: '/dashboard/courses/startup-founders-basics',
       icon: DatabaseIcon,
+      modules: modules,
     },
     // {
     //   name: 'Reports',
