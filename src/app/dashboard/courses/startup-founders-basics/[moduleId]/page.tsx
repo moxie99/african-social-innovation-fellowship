@@ -11,6 +11,7 @@ import { CheckCircle, AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useEffect } from 'react'
 import ReactConfetti from 'react-confetti'
+import { motion } from 'framer-motion'
 export default function ModulePage() {
   const router = useRouter()
   const params = useParams()
@@ -44,6 +45,38 @@ export default function ModulePage() {
 
   if (!moduleData) {
     return <div>Module not found</div>
+  }
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        when: 'beforeChildren',
+        staggerChildren: 0.2,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  }
+
+  const listItemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.3 },
+    },
   }
 
   // Function to go to next module
@@ -92,172 +125,243 @@ export default function ModulePage() {
   const isCompleted = completedModules.includes(moduleId)
 
   return (
-    <div className='p-4 relative'>
+    <motion.div
+      className='p-4 relative'
+      variants={containerVariants}
+      initial='hidden'
+      animate='visible'
+    >
       {showConfetti && <ReactConfetti recycle={false} numberOfPieces={500} />}
-      {/* Completion Alert */}
+      {/* Alerts */}
       {showCompletionAlert && (
-        <Alert className='fixed top-4 right-4 w-auto max-w-md bg-green-50 border-green-200 z-50 transition-all animate-in slide-in-from-top'>
-          <CheckCircle className='h-4 w-4 text-green-500' />
-          <AlertTitle>Success!</AlertTitle>
-          <AlertDescription>
-            Module completed successfully. Your progress has been saved.
-          </AlertDescription>
-        </Alert>
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+        >
+          <Alert className='fixed top-4 right-4 w-auto max-w-md bg-green-50 border-green-200 z-50'>
+            <CheckCircle className='h-4 w-4 text-green-500' />
+            <AlertTitle>Success!</AlertTitle>
+            <AlertDescription>
+              Module completed successfully. Your progress has been saved.
+            </AlertDescription>
+          </Alert>
+        </motion.div>
       )}
 
-      {/* Restricted Access Alert */}
       {showRestrictedAlert && (
-        <Alert className='fixed top-4 right-4 w-auto max-w-md bg-amber-50 border-amber-200 z-50 transition-all animate-in slide-in-from-top'>
-          <AlertCircle className='h-4 w-4 text-amber-500' />
-          <AlertTitle>Access Restricted</AlertTitle>
-          <AlertDescription>
-            You need to complete previous modules first before accessing this
-            one.
-          </AlertDescription>
-        </Alert>
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+        >
+          <Alert className='fixed top-4 right-4 w-auto max-w-md bg-amber-50 border-amber-200 z-50'>
+            <AlertCircle className='h-4 w-4 text-amber-500' />
+            <AlertTitle>Access Restricted</AlertTitle>
+            <AlertDescription>
+              You need to complete previous modules first before accessing this
+              one.
+            </AlertDescription>
+          </Alert>
+        </motion.div>
       )}
-
-      <h1 className='text-xl font-semibold'>{moduleData.title}</h1>
-      <div className='flex flex-wrap gap-4 mt-2'>
-        <p>
-          <span className='font-medium'>Duration:</span> {moduleData.duration}
-        </p>
-        <p>
-          <span className='font-medium'>Format:</span> {moduleData.Format}
-        </p>
-        <p>
-          <span className='font-medium'>Level:</span> {moduleData.level}
-        </p>
-        {isCompleted && (
-          <div className='flex items-center text-green-500 ml-auto'>
-            <CheckCircle className='h-4 w-4 mr-1' />
-            <span>Completed</span>
-          </div>
-        )}
-      </div>
-      <Separator className='my-4' />
-      <p>
-        <span className='font-medium'>Description:</span>
-        {moduleData.description}
-      </p>
-      <p className='font-bold mt-2'>Key Questions We&apos;ll Answer:</p>
-      <ul className='list-disc pl-5'>
-        {moduleData?.keyQuestions?.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-      <Separator className='my-4' />
-      <h1 className='mt-4 text-black font-semibold text-center text-xl'>
-        CASE STORY
-      </h1>
-      <div className='mt-4'>
-        {Object.keys(moduleData.content).map(
-          (key, index) =>
-            key !== 'heading' && (
-              <p key={index} className='mb-4'>
-                {moduleData.content[key as keyof typeof moduleData.content]}
-              </p>
-            )
-        )}
-      </div>
-      <Separator className='my-4' />
-      <div>
-        {moduleData?.lessons?.map((item, index) => (
-          <div className='mt-5' key={index}>
-            <p>{item?.title}</p>
-            <p>{item?.desc}</p>
-            <p>{item?.fullDesc}</p>
-            <br />
-            <ul className='list-disc pl-5'>
-              {item?.items?.map((it, index) => (
-                <li key={index}>{it}</li>
-              ))}
-            </ul>
-            <p className='mt-3 font-medium'>Case Study</p>
-            <ul className='list-disc pl-5'>
-              {item?.example?.map((it, index) => (
-                <li key={index}>{it}</li>
-              ))}
-            </ul>
-            <p className='mt-3 font-medium'>Reflection</p>
-            <ul className='list-disc pl-5'>
-              {item?.assignment?.map((it, index) => (
-                <li key={index}>{it}</li>
-              ))}
-            </ul>
-            <Separator className='my-4' />
-          </div>
-        ))}
-      </div>
-      <div>
-        <ul className='list-disc pl-5'>
-          {moduleData?.modAss?.map((item, index) =>
-            index === 0 ? (
-              <p className='font-medium' key={index}>
-                {item}
-              </p>
-            ) : (
-              <li key={index}>{item}</li>
-            )
+      {/* Header Section */}
+      <motion.div variants={itemVariants}>
+        <h1 className='text-xl font-semibold'>{moduleData.title}</h1>
+        <div className='flex flex-wrap gap-4 mt-2'>
+          <motion.p variants={itemVariants}>
+            <span className='font-medium'>Duration:</span> {moduleData.duration}
+          </motion.p>
+          <motion.p variants={itemVariants}>
+            <span className='font-medium'>Format:</span> {moduleData.Format}
+          </motion.p>
+          <motion.p variants={itemVariants}>
+            <span className='font-medium'>Level:</span> {moduleData.level}
+          </motion.p>
+          {isCompleted && (
+            <motion.div
+              className='flex items-center text-green-500 ml-auto'
+              variants={itemVariants}
+            >
+              <CheckCircle className='h-4 w-4 mr-1' />
+              <span>Completed</span>
+            </motion.div>
           )}
-        </ul>
-      </div>
+        </div>
+      </motion.div>
       <Separator className='my-4' />
-      <div>
-        <ul className='list-disc pl-5'>
+      {/* Description Section */}
+      <motion.div variants={itemVariants}>
+        <p>
+          <span className='font-medium'>Description:</span>
+          {moduleData.description}
+        </p>
+      </motion.div>
+
+      {/* Key Questions Section */}
+      <motion.div variants={itemVariants}>
+        <p className='font-bold mt-2'>Key Questions We&apos;ll Answer:</p>
+        <motion.ul className='list-disc pl-5'>
+          {moduleData?.keyQuestions?.map((item, index) => (
+            <motion.li key={index} variants={listItemVariants} custom={index}>
+              {item}
+            </motion.li>
+          ))}
+        </motion.ul>
+      </motion.div>
+      <Separator className='my-4' />
+      {/* Case Story Section */}
+      <motion.div variants={itemVariants}>
+        <h1 className='mt-4 text-black font-semibold text-center text-xl'>
+          CASE STORY
+        </h1>
+        <motion.div className='mt-4'>
+          {Object.keys(moduleData.content).map(
+            (key, index) =>
+              key !== 'heading' && (
+                <motion.p
+                  key={index}
+                  className='mb-4'
+                  variants={itemVariants}
+                  custom={index}
+                >
+                  {moduleData.content[key as keyof typeof moduleData.content]}
+                </motion.p>
+              )
+          )}
+        </motion.div>
+      </motion.div>
+      <Separator className='my-4' />
+      {/* Lessons Section */}
+      <motion.div variants={itemVariants}>
+        {moduleData?.lessons?.map((item, index) => (
+          <motion.div
+            className='mt-5'
+            key={index}
+            variants={itemVariants}
+            custom={index}
+          >
+            <motion.p variants={listItemVariants}>{item?.title}</motion.p>
+            <motion.p variants={listItemVariants}>{item?.desc}</motion.p>
+            <motion.p variants={listItemVariants}>{item?.fullDesc}</motion.p>
+            <br />
+            <motion.ul className='list-disc pl-5'>
+              {item?.items?.map((it, index) => (
+                <motion.li key={index} variants={listItemVariants}>
+                  {it}
+                </motion.li>
+              ))}
+            </motion.ul>
+
+            <motion.p className='mt-3 font-medium' variants={listItemVariants}>
+              Case Study
+            </motion.p>
+            <motion.ul className='list-disc pl-5'>
+              {item?.example?.map((it, index) => (
+                <motion.li key={index} variants={listItemVariants}>
+                  {it}
+                </motion.li>
+              ))}
+            </motion.ul>
+
+            <motion.p className='mt-3 font-medium' variants={listItemVariants}>
+              Reflection
+            </motion.p>
+            <motion.ul className='list-disc pl-5'>
+              {item?.assignment?.map((it, index) => (
+                <motion.li key={index} variants={listItemVariants}>
+                  {it}
+                </motion.li>
+              ))}
+            </motion.ul>
+            <Separator className='my-4' />
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Additional Resources Section */}
+      <motion.div variants={itemVariants}>
+        <motion.ul className='list-disc pl-5'>
           {moduleData?.addResouces?.map((item, index) =>
             index === 0 ? (
-              <p className='font-medium' key={index}>
+              <motion.p
+                className='font-medium'
+                key={index}
+                variants={listItemVariants}
+              >
                 {item}
-              </p>
+              </motion.p>
             ) : (
-              <li key={index}>{item}</li>
+              <motion.li key={index} variants={listItemVariants}>
+                {item}
+              </motion.li>
             )
           )}
-        </ul>
-      </div>
+        </motion.ul>
+      </motion.div>
+
       <Separator className='my-4' />
-      <div>
-        <ul className='list-disc pl-5'>
+
+      {/* Discussion Prompts Section */}
+      <motion.div variants={itemVariants}>
+        <motion.ul className='list-disc pl-5'>
           {moduleData?.disscForPrompt?.map((item, index) =>
             index === 0 ? (
-              <p className='font-medium' key={index}>
+              <motion.p
+                className='font-medium'
+                key={index}
+                variants={listItemVariants}
+              >
                 {item}
-              </p>
+              </motion.p>
             ) : (
-              <li key={index}>{item}</li>
+              <motion.li key={index} variants={listItemVariants}>
+                {item}
+              </motion.li>
             )
           )}
-        </ul>
-      </div>
-      <div className='flex flex-wrap gap-4 mt-8 items-center justify-center'>
-        <button
+        </motion.ul>
+      </motion.div>
+
+      {/* Navigation Buttons */}
+      <motion.div
+        className='flex flex-wrap gap-4 mt-8 items-center justify-center'
+        variants={itemVariants}
+        whileHover={{ scale: 1.02 }}
+      >
+        <motion.button
           onClick={previousModule}
           className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors'
           disabled={currentModuleIndex === 0}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           Previous
-        </button>
+        </motion.button>
 
         {!isCompleted && (
-          <Button
+          <motion.button
             onClick={handleCompleteModule}
-            className='px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors'
+            className='px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors flex items-center'
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <CheckCircle className='mr-2 h-4 w-4' />
             Confirm Completion
-          </Button>
+          </motion.button>
         )}
 
-        <button
+        <motion.button
           onClick={nextModule}
           className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors'
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           {currentModuleIndex === modules.length - 1
             ? 'Take Assessments'
             : 'Next'}
-        </button>
-      </div>
-    </div>
+        </motion.button>
+      </motion.div>
+    </motion.div>
   )
 }

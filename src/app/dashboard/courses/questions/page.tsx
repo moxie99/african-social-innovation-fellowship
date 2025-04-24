@@ -2,13 +2,16 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { questions as fullArray } from '@/data/questions'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 import jsPDF from 'jspdf'
 import { getRandomQuestionsRenumbered } from '@/helpers/randomQuestions'
+import { motion, AnimatePresence } from 'framer-motion'
 import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { useRouter } from 'next/navigation'
+import { Progress } from '@/components/ui/progress'
+import { CircleCheck } from 'lucide-react'
 
 const Questions = () => {
   const [username, setUsername] = useState('')
@@ -45,6 +48,25 @@ const Questions = () => {
     }
   }, [answers, current, assessmentCount])
 
+  // Add timer state
+  const [timeLeft, setTimeLeft] = useState(60 * 60) // 60 minutes in seconds
+
+  useEffect(() => {
+    if (!submitted && storedName && showQuiz) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer)
+            handleSubmit() // Auto-submit when time runs out
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+
+      return () => clearInterval(timer)
+    }
+  }, [submitted, storedName, showQuiz])
   const handleStart = () => {
     setStoredName(username)
     if (typeof window !== 'undefined') {
@@ -54,7 +76,11 @@ const Questions = () => {
     }
   }
 
-  const questions = getRandomQuestionsRenumbered(fullArray, 100)
+  // Use useMemo to ensure questions array doesn't change on re-renders
+  const questions = useMemo(
+    () => getRandomQuestionsRenumbered(fullArray, 100),
+    []
+  )
 
   const handleOption = (letter: string) => {
     setAnswers({ ...answers, [questions[current].number]: letter })
@@ -89,13 +115,50 @@ const Questions = () => {
   const q = questions[current]
   const selected = answers[q.number]
 
+  // Calculate percentage of questions answered
+  const answeredCount = Object.keys(answers).length
+  const progressPercentage = (answeredCount / questions.length) * 100
+  // Animation variants for questions
+  const questionVariants = {
+    initial: { x: 50, opacity: 0 },
+    animate: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: 'easeOut' },
+    },
+    exit: { x: -50, opacity: 0, transition: { duration: 0.3 } },
+  }
+
+  // Animation variants for options with stagger effect
+  const optionsContainerVariants = {
+    animate: {
+      transition: { staggerChildren: 0.1 },
+    },
+  }
+
+  const optionVariants = {
+    initial: { y: 20, opacity: 0 },
+    animate: { y: 0, opacity: 1, transition: { duration: 0.3 } },
+  }
+  // Format time function
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = seconds % 60
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+  }
+
   if (loading) {
     return <div>Loading...</div>
   }
 
   if (!storedName && !showQuiz) {
     return (
-      <div className='min-h-screen flex items-center justify-center'>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className='min-h-screen flex items-center justify-center'
+      >
         <div className='space-y-4 p-6 border shadow rounded-xl'>
           <h1 className='text-xl font-semibold'>
             Enter your name to begin quiz:
@@ -109,7 +172,7 @@ const Questions = () => {
             Start Quiz
           </Button>
         </div>
-      </div>
+      </motion.div>
     )
   }
 
@@ -118,7 +181,29 @@ const Questions = () => {
     <Dialog open={storedName ? !showQuiz || submitted : showQuiz || submitted}>
       <DialogContent className='w-[95%] md:w-[85%] lg:w-[75%] max-w-4xl mx-auto min-h-[200px] max-h-[85vh] overflow-y-auto p-4 md:p-6 lg:p-8'>
         {!submitted ? (
-          <div className='space-y-4'>
+          <motion.div
+            key={current}
+            variants={questionVariants}
+            initial='initial'
+            animate='animate'
+            exit='exit'
+            className='space-y-4'
+          >
+            <div className='mb-4'>
+              <div className='flex justify-between items-center mb-2'>
+                <div className='flex items-center gap-2'>
+                  <CircleCheck className='h-5 w-5 text-primary' />
+                  <span className='text-sm font-medium'>
+                    Time Remaining: {formatTime(timeLeft)}
+                  </span>
+                </div>
+                <span className='text-sm font-medium'>
+                  {answeredCount}/{questions.length} completed
+                </span>
+              </div>
+              <Progress value={progressPercentage} className='h-2' />
+            </div>
+
             <DialogHeader>
               <h2 className='text-2xl font-bold'>
                 {q.number < questions.length ? 'ASSESSMENT' : 'FINAL QUESTION'}
@@ -128,18 +213,24 @@ const Questions = () => {
                 {q.question}
               </p>
             </DialogHeader>
-            <div className='space-y-2'>
+            <motion.div
+              className='space-y-2'
+              variants={optionsContainerVariants}
+              initial='initial'
+              animate='animate'
+            >
               {Object.entries(q.options).map(([key, text]) => (
-                <Button
-                  key={key}
-                  variant={selected === key ? 'default' : 'outline'}
-                  className='w-full justify-start text-left whitespace-normal h-auto py-3'
-                  onClick={() => handleOption(key)}
-                >
-                  {key}. {text}
-                </Button>
+                <motion.div key={key} variants={optionVariants}>
+                  <Button
+                    variant={selected === key ? 'default' : 'outline'}
+                    className='w-full justify-start text-left whitespace-normal h-auto py-3'
+                    onClick={() => handleOption(key)}
+                  >
+                    {key}. {text}
+                  </Button>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
             <div className='flex justify-between mt-6'>
               <Button
                 onClick={() => setCurrent(current - 1)}
@@ -161,9 +252,14 @@ const Questions = () => {
                 </Button>
               )}
             </div>
-          </div>
+          </motion.div>
         ) : (
-          <div className='text-center space-y-4'>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className='text-center space-y-4'
+          >
             <Confetti width={width} height={height} recycle={false} />
             <h2 className='text-xl font-semibold'>Quiz Completed!</h2>
             <p>Thank you, {storedName}. Your responses have been recorded.</p>
@@ -183,7 +279,7 @@ const Questions = () => {
                 Retake Assessment
               </Button>
             ) : null}
-          </div>
+          </motion.div>
         )}
       </DialogContent>
     </Dialog>
