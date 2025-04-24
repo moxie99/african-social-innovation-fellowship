@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import {
@@ -34,22 +32,9 @@ import {
 } from './ui/tooltip'
 import { Button } from './ui/button'
 import { useRouter } from 'next/navigation'
-import {
-  JSX,
-  JSXElementConstructor,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useState,
-} from 'react'
+import { useState } from 'react'
 import { useModuleProgress } from '@/context/ModuleProgressContext'
-
-interface Module {
-  id: number
-  name: string
-  url: string
-  icon: LucideIcon
-}
+import { Module } from '@/types/type'
 
 interface Document {
   name: string
@@ -58,7 +43,7 @@ interface Document {
   modules?: Module[]
 }
 
-export function NavDocuments({ items }: { items: any[] }) {
+export function NavDocuments({ items }: { items: Document[] }) {
   const { isMobile } = useSidebar()
   const router = useRouter()
   const [expandedCourse, setExpandedCourse] = useState<string | null>(null)
@@ -168,90 +153,59 @@ export function NavDocuments({ items }: { items: any[] }) {
             {/* Modules submenu */}
             {item.modules && expandedCourse === item.name && (
               <div className='pl-6'>
-                {item.modules.map(
-                  (module: {
-                    id:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<
-                          unknown,
-                          string | JSXElementConstructor<any>
-                        >
-                      | Iterable<ReactNode>
-                      | Promise<
-                          | string
-                          | number
-                          | bigint
-                          | boolean
-                          | ReactPortal
-                          | ReactElement<
-                              unknown,
-                              string | JSXElementConstructor<any>
+                {item.modules.map((module) => {
+                  const moduleId =
+                    typeof module.id === 'string'
+                      ? module?.id?.toLowerCase().replace(/\s+/g, '-')
+                      : `module-${module.id}`
+
+                  const isCompleted = completedModules.includes(moduleId)
+                  const isCurrent = moduleId === currentModule
+                  const isAccessible = canAccessModule(moduleId)
+
+                  return (
+                    <TooltipProvider key={moduleId}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SidebarMenuItem>
+                            <SidebarMenuButton
+                              asChild
+                              className={`relative ${getModuleColor(
+                                moduleId
+                              )} ${
+                                !isAccessible
+                                  ? 'cursor-not-allowed opacity-50'
+                                  : ''
+                              }`}
                             >
-                          | Iterable<ReactNode>
-                          | null
-                          | undefined
-                        >
-                      | null
-                      | undefined
-                    url: string
-                    icon: JSX.IntrinsicAttributes
-                  }) => {
-                    const moduleId =
-                      typeof module.id === 'string'
-                        ? module?.id?.toLowerCase().replace(/\s+/g, '-')
-                        : `module-${module.id}`
-
-                    const isCompleted = completedModules.includes(moduleId)
-                    const isCurrent = moduleId === currentModule
-                    const isAccessible = canAccessModule(moduleId)
-
-                    return (
-                      <TooltipProvider key={moduleId}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <SidebarMenuItem>
-                              <SidebarMenuButton
-                                asChild
-                                className={`relative ${getModuleColor(
-                                  moduleId
-                                )} ${
-                                  !isAccessible
-                                    ? 'cursor-not-allowed opacity-50'
-                                    : ''
-                                }`}
+                              <div
+                                onClick={(e) =>
+                                  handleModuleClick(e, moduleId, module.url)
+                                }
+                                className='flex items-center gap-2'
                               >
-                                <div
-                                  onClick={(e) =>
-                                    handleModuleClick(e, moduleId, module.url)
-                                  }
-                                  className='flex items-center gap-2'
-                                >
-                                  <module.icon className='h-4 w-4' />
-                                  <span className='text-sm'>{module.id}</span>
-                                  {isCompleted && (
-                                    <CheckCircleIcon className='h-4 w-4 text-green-500 ml-auto' />
-                                  )}
-                                </div>
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {!isAccessible
-                              ? 'Complete previous modules first'
-                              : isCompleted
-                              ? 'Module completed'
-                              : isCurrent
-                              ? 'Current module'
-                              : 'Module available'}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )
-                  }
-                )}
+                                <module.icon className='h-4 w-4' />
+                                <span className='text-sm'>{module.id}</span>
+                                {isCompleted && (
+                                  <CheckCircleIcon className='h-4 w-4 text-green-500 ml-auto' />
+                                )}
+                              </div>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {!isAccessible
+                            ? 'Complete previous modules first'
+                            : isCompleted
+                            ? 'Module completed'
+                            : isCurrent
+                            ? 'Current module'
+                            : 'Module available'}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )
+                })}
               </div>
             )}
           </div>

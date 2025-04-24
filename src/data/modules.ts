@@ -1,6 +1,7 @@
+import { Module } from '@/types/type'
 import { BookIcon } from 'lucide-react'
 
-export const modules = [
+export const modules: Module[] = [
   {
     id: 'Module 1',
     url: '/dashboard/courses/startup-founders-basics/module-1',
