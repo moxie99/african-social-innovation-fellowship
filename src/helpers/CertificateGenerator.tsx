@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import html2canvas from 'html2canvas'
+import html2canvas from 'html2canvas-pro'
 import { jsPDF } from 'jspdf'
 import { format } from 'date-fns'
 import Image from 'next/image'
@@ -103,7 +103,7 @@ const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
     <div className='p-8'>
       <Card
         ref={certificateRef}
-        className='w-full max-w-[1000px] h-auto aspect-[5/4] mx-auto px-8 bg-white shadow-lg relative overflow-hidden'
+        className='w-full max-w-[1000px] h-auto aspect-[5/4] mx-auto px-8 bg-white shadow-lg relative overflow-hidden border-t-20 border-l-0 border-r-0 border-red-950'
         id='certificate-element'
       >
         <div className='w-full h-[10px] bg-red-700' />

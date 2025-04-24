@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input'
 import { questions as fullArray } from '@/data/questions'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
-import jsPDF from 'jspdf'
 import { getRandomQuestionsRenumbered } from '@/helpers/randomQuestions'
 import { motion } from 'framer-motion'
 import Confetti from 'react-confetti'
@@ -88,28 +87,24 @@ const Questions = () => {
 
   const handleSubmit = () => {
     setSubmitted(true)
+    const newAssessmentCount = assessmentCount + 1
+    setAssessmentCount(newAssessmentCount)
+  }
+
+  const handleRetake = () => {
     const correct = questions.filter(
       (q) => answers[q.number] === q.answer
     ).length
 
-    const newAssessmentCount = assessmentCount + 1
-    setAssessmentCount(newAssessmentCount)
     if (correct >= 70) {
-      const doc = new jsPDF()
-      doc.text(`Certificate of Completion`, 20, 30)
-      doc.text(`Awarded to: ${storedName}`, 20, 50)
-      doc.text(`Score: ${correct}/100`, 20, 70)
-      doc.save(`${storedName}_certificate.pdf`)
+      router.push('/dashboard/courses/certifcate')
+    } else {
+      setAnswers({})
+      setCurrent(0)
+      setSubmitted(false)
+      setShowQuiz(true)
+      window.location.reload()
     }
-    router.push('/dashboard/courses/certifcate')
-  }
-
-  const handleRetake = () => {
-    setAnswers({})
-    setCurrent(0)
-    setSubmitted(false)
-    setShowQuiz(true)
-    window.location.reload()
   }
 
   const q = questions[current]
@@ -267,7 +262,7 @@ const Questions = () => {
               Score: {correct} / {questions.length}
             </p>
             {correct >= 70 ? (
-              <p>🎉 You passed! Certificate has been downloaded.</p>
+              <p>🎉 You passed! Click button below to view your certificate</p>
             ) : (
               <p>
                 😢 You did not meet the passing mark. Please retake the quiz.
@@ -276,7 +271,7 @@ const Questions = () => {
             <p>You have taken this quiz {assessmentCount} times.</p>
             {correct < 70 ? (
               <Button onClick={handleRetake} className='w-full'>
-                Retake Assessment
+                {correct >= 70 ? 'View Certificate' : ' Retake Assessment'}
               </Button>
             ) : null}
           </motion.div>
