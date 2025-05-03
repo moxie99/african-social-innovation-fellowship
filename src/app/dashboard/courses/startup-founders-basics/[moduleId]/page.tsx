@@ -111,19 +111,24 @@ export default function ModulePage() {
 
   // Function to go to previous module
   const previousModule = () => {
+    console.log('[[[[[]]]]]]666666')
     if (step > 0) {
       setStep(step - 1)
     } else {
+      console.log('[[[[[]]]]]]')
       if (currentModuleIndex > 0) {
         const prevModuleId = modules[currentModuleIndex - 1].id
           .toLowerCase()
           .replace(/\s+/g, '-')
+        console.log('====++++===++++uuuu', prevModuleId)
         router.push(
           `/dashboard/courses/startup-founders-basics/${prevModuleId}`
         )
       }
     }
   }
+
+  console.log('====+++++==!!!!!!=', currentModuleIndex, step)
 
   // Handle module completion
   const handleCompleteModule = () => {
@@ -400,18 +405,19 @@ export default function ModulePage() {
       <motion.div
         className='flex flex-wrap gap-4 mt-8 items-center justify-between fixed bottom-0 w-full left-0 z-40 p-4 bg-white px-6'
         variants={itemVariants}
-        whileHover={{ scale: 1.02 }}
+        whileHover={{ scale: 1.002 }}
       >
-        <motion.button
-          onClick={previousModule}
-          className='px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-red-700 transition-colors'
-          disabled={currentModuleIndex === 0 || step === 0}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Previous
-        </motion.button>
-
+        {currentModuleIndex > 0 && (
+          <motion.button
+            onClick={previousModule}
+            className='px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-red-700 transition-colors'
+            disabled={currentModuleIndex === 0}
+            whileHover={{ scale: 1.005 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {step === 0 ? 'Previous Module' : 'Previous'}
+          </motion.button>
+        )}
         {step === 3 && !isCompleted && (
           <motion.button
             onClick={handleCompleteModule}
@@ -427,7 +433,7 @@ export default function ModulePage() {
         <motion.button
           onClick={nextModule}
           className='px-4 py-2 bg-[#db4b2c] text-white rounded-md hover:bg-blue-600 transition-colors'
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.005 }}
           whileTap={{ scale: 0.95 }}
         >
           {currentModuleIndex === modules.length - 1
