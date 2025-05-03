@@ -10,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useEffect } from 'react'
 import ReactConfetti from 'react-confetti'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 export default function ModulePage() {
   const router = useRouter()
   const params = useParams()
@@ -228,6 +229,15 @@ export default function ModulePage() {
             </motion.li>
           ))}
         </motion.ul>
+        <div className='mt-4'>
+          <Image
+            src='https://images.unsplash.com/photo-1679621577331-4025252aa65b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8VkMlMjBGb3VuZGVyJTIwSW1hZ2VzfGVufDB8fDB8fHww'
+            alt='VC Founder'
+            width={900}
+            height={500}
+            className='rounded-lg object-cover w-full h-auto'
+          />
+        </div>
       </motion.div>
       <Separator className='my-4' />
       {/* Case Story Section */}

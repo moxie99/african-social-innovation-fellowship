@@ -27,6 +27,7 @@ type ModuleContent = {
 export type Module = {
   id: string
   section: string
+  imgUrl: string
   url: string
   icon: LucideIcon // ✅ Proper type for lucide-react icons
   title: string
