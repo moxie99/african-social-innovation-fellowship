@@ -8,6 +8,7 @@ export const modules: Module[] = [
     icon: BookIcon,
     title:
       'MODULE 1: DREAM BIG, FUND SMART – INTRODUCTION TO VENTURE CAPITAL FOR AFRICAN FOUNDERS',
+    section: '',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
     level: 'Beginner',
@@ -136,6 +137,7 @@ export const modules: Module[] = [
   {
     id: 'Module 2',
     url: '/dashboard/courses/startup-founders-basics/module-2',
+    section: '',
     icon: BookIcon,
     title: 'MODULE 2: INSIDE A VC FIRM – DEALS,FEES & WHO CALLS THE SHOTS',
     duration: '2 Weeks',
@@ -294,6 +296,7 @@ Let’s say Startup A becomes wildly successful, offering healthcare solutions t
   {
     id: 'Module 3',
     url: '/dashboard/courses/startup-founders-basics/module-3',
+    section: '',
     icon: BookIcon,
     title: 'MODULE 3:  The Ups and Downs of VC Funding;',
     duration: '2 Weeks',
@@ -517,6 +520,7 @@ Loss of Control
     url: '/dashboard/courses/startup-founders-basics/module-4',
     icon: BookIcon,
     title: 'MODULE 4: VC FIRMS DECODED – STRATEGIES THAT BUILD UNICORNS',
+    section: '',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
     level: 'Advanced',
@@ -684,6 +688,7 @@ Whether through First Round’s community building, Benchmark’s concentrated a
   {
     id: 'Module 5',
     url: '/dashboard/courses/startup-founders-basics/module-5',
+    section: '',
     icon: BookIcon,
     title: 'MODULE 5: VC JOURNEY SIMULATOR –FROM SEED TO EXIT',
     duration: '2 Weeks',
@@ -870,7 +875,7 @@ Map your startup’s hypothetical funding path:`,
       'Glossary Deep Dive',
       `Cap Table: Spreadsheet tracking ownership (try Carta for templates).`,
       `Convertible Debt: Loan → equity in next round (often with a discount).`,
-      `"Funding isn’t just about money—it’s about making choices you can live with."`,
+      `Funding isn’t just about money—it’s about making choices you can live with.`,
     ],
     disscForPrompt: [
       'Discussion Forum Prompts',
@@ -884,6 +889,7 @@ Map your startup’s hypothetical funding path:`,
     icon: BookIcon,
     title:
       'MODULE 6: LEVERAGED BUYOUTS (LBOS) –SCALING BUSINESSES WITH SMART DEBT',
+    section: '',
     duration: '2 Weeks',
     Format: 'Text-Based Case Study, Financial Simulations, Decision Exercises',
     level: 'Intermediate',
@@ -1110,6 +1116,7 @@ Pick a real or hypothetical African business and outline an LBO plan:`,
 DECONSTRUCTED – FUNDS, FEES &
 FUTURE EMPIRES
 `,
+    section: '',
     duration: '2 Weeks',
     Format: 'Text-Based Case Study, Financial Modeling, Role-Playing',
     level: 'Advanced',
@@ -1295,12 +1302,12 @@ Calculate Nuru’s fees over 10 years:
 ○
 Management fee: 2% of
 ○
-100�=
+1000=
 ○
 100M=2M/year → $20M total.
 Carried interest: 20% of
 ○
-1�������=
+1=
 ○
 1Bprofit=200M (paid only after returning LP capital).
 `,
@@ -1337,13 +1344,13 @@ Profit Split:
 ○
 LPs get 80% of
 ○
-1.1�=
+1.10=
 ○
 1.1B=880M.
 ○
 GPs get 20% =
 ○
-220�+
+2200+
 ○
 220M+20M fees.`,
         items: [
@@ -1419,8 +1426,8 @@ Create a 1-page fund prospectus outlining:
     id: 'Module 8',
     url: '/dashboard/courses/startup-founders-basics/module-8',
     icon: BookIcon,
-    title:
-      'MODULE 8: LBOs IN ACTION – AFRICAN CASE STUDIES & FUTURE PLAYBOOK :  Section: Private Equity Strategies',
+    title: 'MODULE 8: LBOs IN ACTION – AFRICAN CASE STUDIES & FUTURE PLAYBOOK',
+    section: 'Section: Private Equity Strategies',
     duration: '2 Weeks',
     Format:
       'Text-Based Case Analysis, Comparative Exercises, Strategic Planning',
@@ -1587,7 +1594,7 @@ Rewards: Streamlined ops cut costs by 30% in 3 years.`,
 ●
 Calculate Cell C’s annual debt servicing if $200M was borrowed at 15%:
 ○
-200�×15
+2000×15
 ○
 200M×1530M/year.
 ○
@@ -1680,9 +1687,8 @@ The best LBOs don’t just extract value—they build legacies.
     id: 'Module 9',
     url: '/dashboard/courses/startup-founders-basics/module-9',
     icon: BookIcon,
-    title:
-      'MODULE 9: SPACS UNLOCKED – THE FAST TRACK TO GOING PUBLIC Section: Special Purpose Acquisition Companies (SPACs)',
-
+    title: 'MODULE 9: SPACS UNLOCKED – THE FAST TRACK TO GOING PUBLIC',
+    section: 'Section: Special Purpose Acquisition Companies (SPACs)',
     duration: '2 Weeks',
     Format:
       'Text-Based Case Study, Interactive Scenarios, Financial Simulations',
@@ -1923,9 +1929,9 @@ Imagine you’re launching a SPAC to acquire an African startup. Create a 1-page
     title: `MODULE 2: SPAC CASE STUDY – HOW
 JUMIA REWROTE AFRICA’S TECH
 PLAYBOOK 
-Section: Special Purpose Acquisition Companies (SPACs)
-`,
 
+`,
+    section: 'Section: Special Purpose Acquisition Companies (SPACs)',
     duration: '2 Weeks',
     Format: 'Text-Based Deep Dive, Financial Analysis, Strategic Simulations',
     level: 'Advanced',
@@ -2093,7 +2099,7 @@ they’re a launchpad for reaching new heights.`,
           'Speed – Listed on NYSE in 6 months vs. 18+ months for traditional IPO.',
           'Exercise:',
           'Calculate Jumia’s cash runway post-merger:',
-          '340�/',
+          '3400/',
           '340M/50M quarterly burn = ~6.8 quarters of operations.',
         ],
         assignment: [],
@@ -2176,9 +2182,8 @@ Compare two paths for a fictional African startup:
     icon: BookIcon,
     title: `MODULE 3: SPAC PITFALLS & POWER –
 LESSONS FROM WEJO’S COLLAPSE
-Section: Special Purpose Acquisition Companies (SPACs)
 `,
-
+    section: 'Section: Special Purpose Acquisition Companies (SPACs)',
     duration: '2 Weeks',
     Format: 'Text-Based Case Study, Risk Assessment Exercises, Glossary Drill',
     level: 'Advanced',
@@ -2469,17 +2474,17 @@ sometimes baffling world of special-purpose acquisition companies.
         items: [
           '2021: SPAC merger announced ($1.1B valuation).',
           '2022: Goes public with',
-          '330�(',
+          '3300(',
           '330M(230M SPAC + $100M PIPE).',
           '2023: Files Chapter 11; shares drop from',
-          '10��',
+          '1',
           '10to0.30.',
           'Valuation: $1.1B (Africa’s first tech unicorn).',
         ],
         example: [
           '4 Fatal Flaws:',
           'Revenue Illusion:',
-          '7����������.',
+          '7.',
           '7Mrevenuevs.80M losses (2022).',
           'Regulatory Drag: GDPR/Privacy compliance costs.',
           'Product Delays: Unfinished data platform at merger.',
@@ -2488,7 +2493,7 @@ sometimes baffling world of special-purpose acquisition companies.
         assignment: [
           'Exercise:',
           'Calculate Wejo’s cash runway at merger:',
-          '330�/',
+          '3300/',
           '330M/20M monthly burn = ~16.5 months.',
           'Why wasn’t this enough? (Answer: Revenue never scaled.)',
         ],
