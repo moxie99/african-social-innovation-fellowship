@@ -388,13 +388,13 @@ export default function ModulePage() {
 
       {/* Navigation Buttons */}
       <motion.div
-        className='flex flex-wrap gap-4 mt-8 items-center justify-center fixed bottom-0 w-full left-0 z-40 p-4'
+        className='flex flex-wrap gap-4 mt-8 items-center justify-between fixed bottom-0 w-full left-0 z-40 p-4 bg-white px-6'
         variants={itemVariants}
         whileHover={{ scale: 1.02 }}
       >
         <motion.button
           onClick={previousModule}
-          className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors'
+          className='px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-red-700 transition-colors'
           disabled={currentModuleIndex === 0 || step === 0}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -416,7 +416,7 @@ export default function ModulePage() {
 
         <motion.button
           onClick={nextModule}
-          className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors'
+          className='px-4 py-2 bg-[#db4b2c] text-white rounded-md hover:bg-blue-600 transition-colors'
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >

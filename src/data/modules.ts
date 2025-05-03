@@ -1926,7 +1926,7 @@ Imagine you’re launching a SPAC to acquire an African startup. Create a 1-page
     id: 'Module 10',
     url: '/dashboard/courses/startup-founders-basics/module-10',
     icon: BookIcon,
-    title: `MODULE 2: SPAC CASE STUDY – HOW
+    title: `MODULE 10: SPAC CASE STUDY – HOW
 JUMIA REWROTE AFRICA’S TECH
 PLAYBOOK 
 
@@ -2180,7 +2180,7 @@ Compare two paths for a fictional African startup:
     id: 'Module 11',
     url: '/dashboard/courses/startup-founders-basics/module-11',
     icon: BookIcon,
-    title: `MODULE 3: SPAC PITFALLS & POWER –
+    title: `MODULE 11: SPAC PITFALLS & POWER –
 LESSONS FROM WEJO’S COLLAPSE
 `,
     section: 'Section: Special Purpose Acquisition Companies (SPACs)',

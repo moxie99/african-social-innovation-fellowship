@@ -3,22 +3,16 @@
 import * as React from 'react'
 import {
   ArrowUpCircleIcon,
-  BarChartIcon,
   CameraIcon,
   DatabaseIcon,
   FileCodeIcon,
   FileTextIcon,
-  FolderIcon,
   HelpCircleIcon,
-  LayoutDashboardIcon,
-  ListIcon,
   SearchIcon,
   SettingsIcon,
-  UsersIcon,
 } from 'lucide-react'
-
+import { useUser } from '@clerk/nextjs'
 import { NavDocuments } from '@/components/nav-documents'
-import { NavSecondary } from '@/components/nav-secondary'
 import {
   Sidebar,
   SidebarContent,
@@ -29,8 +23,8 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import { NavMain } from './nav-main'
-import { NavUser } from './nav-user'
 import { modules } from '@/data/modules'
+import { NavUser } from './nav-user'
 
 const data = {
   user: {
@@ -39,31 +33,31 @@ const data = {
     avatar: '/avatars/shadcn.jpg',
   },
   navMain: [
-    {
-      title: 'Dashboard',
-      url: '#',
-      icon: LayoutDashboardIcon,
-    },
-    {
-      title: 'Lifecycle',
-      url: '#',
-      icon: ListIcon,
-    },
-    {
-      title: 'Analytics',
-      url: '#',
-      icon: BarChartIcon,
-    },
-    {
-      title: 'Projects',
-      url: '#',
-      icon: FolderIcon,
-    },
-    {
-      title: 'Team',
-      url: '#',
-      icon: UsersIcon,
-    },
+    // {
+    //   title: 'Dashboard',
+    //   url: '#',
+    //   icon: LayoutDashboardIcon,
+    // },
+    // {
+    //   title: 'Lifecycle',
+    //   url: '#',
+    //   icon: ListIcon,
+    // },
+    // {
+    //   title: 'Analytics',
+    //   url: '#',
+    //   icon: BarChartIcon,
+    // },
+    // {
+    //   title: 'Projects',
+    //   url: '#',
+    //   icon: FolderIcon,
+    // },
+    // {
+    //   title: 'Team',
+    //   url: '#',
+    //   icon: UsersIcon,
+    // },
   ],
   navClouds: [
     {
@@ -151,6 +145,19 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUser()
+
+  const sidebarUser = user
+    ? {
+        name: user.fullName || user.firstName || 'User',
+        email: user.primaryEmailAddress?.emailAddress || '',
+        avatar: user.imageUrl || '',
+      }
+    : {
+        name: 'Loading...',
+        email: '',
+        avatar: '',
+      }
   return (
     <Sidebar collapsible='offcanvas' {...props}>
       <SidebarHeader>
@@ -163,7 +170,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <a href='#'>
                 <ArrowUpCircleIcon className='h-5 w-5' />
                 <span className='text-base font-semibold'>
-                  African Socail Innovation Fellowship.
+                  African Social Innovation Fellowship.
                 </span>
               </a>
             </SidebarMenuButton>
@@ -173,10 +180,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className='mt-auto' />
+        {/* <NavSecondary items={data.navSecondary} className='mt-auto' /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={sidebarUser} />
       </SidebarFooter>
     </Sidebar>
   )
