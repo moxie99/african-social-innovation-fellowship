@@ -1139,7 +1139,7 @@ Pick a real or hypothetical African business and outline an LBO plan:`,
     imgUrl:
       'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044246/mod_7a_smhcqj.png',
     imgUrl2:
-      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044246/mod_8a_ewocth.png',
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044250/mod_7b_uahzse.png',
     title: `MODULE 7: PRIVATE EQUITY
 DECONSTRUCTED – FUNDS, FEES &
 FUTURE EMPIRES

@@ -251,7 +251,7 @@ export default function ModulePage() {
       )}
 
       {/* Case Story Section */}
-      {step === 0 && (
+      {step === 0 && moduleData?.content?.content1 && (
         <>
           <motion.div variants={itemVariants}>
             <h1 className='mt-4 text-[#db4b2c] font-semibold text-center text-xl'>
@@ -421,17 +421,16 @@ export default function ModulePage() {
         variants={itemVariants}
         whileHover={{ scale: 1.002 }}
       >
-        {currentModuleIndex > 0 ||
-          (step > 0 && (
-            <motion.button
-              onClick={previousModule}
-              className='px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-red-700 transition-colors'
-              whileHover={{ scale: 1.005 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {step === 0 ? 'Previous Module' : 'Previous'}
-            </motion.button>
-          ))}
+        {(currentModuleIndex > 0 || (currentModuleIndex === 0 && step > 0)) && (
+          <motion.button
+            onClick={previousModule}
+            className='px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-red-700 transition-colors'
+            whileHover={{ scale: 1.005 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {step === 0 ? 'Previous Module' : 'Previous'}
+          </motion.button>
+        )}
         {step === 3 && !isCompleted && (
           <motion.button
             onClick={handleCompleteModule}
