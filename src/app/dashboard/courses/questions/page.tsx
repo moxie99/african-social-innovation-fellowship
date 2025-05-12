@@ -11,7 +11,7 @@ import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { useRouter } from 'next/navigation'
 import { Progress } from '@/components/ui/progress'
-import { CircleCheck } from 'lucide-react'
+import { Clock } from 'lucide-react'
 
 const Questions = () => {
   const [username, setUsername] = useState('')
@@ -23,56 +23,73 @@ const Questions = () => {
   const [loading, setLoading] = useState(true)
   const [assessmentCount, setAssessmentCount] = useState(0)
 
+  // Timer state - 60 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(60 * 60)
+
   const router = useRouter()
   const { width, height } = useWindowSize()
 
+  // Load saved state from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedName = localStorage.getItem('vc_quiz_name')
       const savedAnswers = localStorage.getItem('vc_quiz_answers')
       const savedCurrent = localStorage.getItem('vc_quiz_current')
       const savedAssessmentCount = localStorage.getItem('vc_quiz_count')
+      const savedTimeLeft = localStorage.getItem('vc_quiz_time_left')
 
-      if (savedName) setStoredName(savedName)
+      if (savedName) {
+        setStoredName(savedName)
+        setShowQuiz(true) // Important: Show quiz if we have a name
+      }
+
       if (savedAnswers) setAnswers(JSON.parse(savedAnswers))
       if (savedCurrent) setCurrent(Number(savedCurrent))
       if (savedAssessmentCount) setAssessmentCount(Number(savedAssessmentCount))
+      if (savedTimeLeft) setTimeLeft(Number(savedTimeLeft))
+      else setTimeLeft(60 * 60) // Reset to 60 minutes if no saved time
+
       setLoading(false)
     }
   }, [])
 
+  // Save answers, current question and timer to localStorage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && storedName) {
       localStorage.setItem('vc_quiz_answers', JSON.stringify(answers))
       localStorage.setItem('vc_quiz_current', String(current))
+      localStorage.setItem('vc_quiz_time_left', String(timeLeft))
     }
-  }, [answers, current, assessmentCount])
+  }, [answers, current, timeLeft, storedName])
 
-  // Add timer state
-  const [timeLeft, setTimeLeft] = useState(60 * 60) // 60 minutes in seconds
-
+  // Timer countdown effect
   useEffect(() => {
+    // Only run timer when quiz is active
     if (!submitted && storedName && showQuiz) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer)
+      const timerInterval = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timerInterval)
             handleSubmit() // Auto-submit when time runs out
             return 0
           }
-          return prev - 1
+          return prevTime - 1
         })
       }, 1000)
 
-      return () => clearInterval(timer)
+      // Cleanup timer on unmount or when quiz is submitted
+      return () => clearInterval(timerInterval)
     }
   }, [submitted, storedName, showQuiz])
+
   const handleStart = () => {
     setStoredName(username)
+    setShowQuiz(true)
+    setTimeLeft(60 * 60) // Reset timer to 60 minutes
+
     if (typeof window !== 'undefined') {
       localStorage.setItem('vc_quiz_name', username)
-      // Refresh the page after setting the name
-      window.location.reload()
+      localStorage.setItem('vc_quiz_time_left', String(60 * 60))
     }
   }
 
@@ -90,6 +107,10 @@ const Questions = () => {
     setSubmitted(true)
     const newAssessmentCount = assessmentCount + 1
     setAssessmentCount(newAssessmentCount)
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('vc_quiz_count', String(newAssessmentCount))
+    }
   }
 
   const handleRetake = () => {
@@ -100,20 +121,40 @@ const Questions = () => {
     if (correct >= 70) {
       router.push('/dashboard/courses/certifcate')
     } else {
+      // Reset quiz state
       setAnswers({})
       setCurrent(0)
       setSubmitted(false)
-      setShowQuiz(true)
-      window.location.reload()
+      setTimeLeft(60 * 60) // Reset timer to 60 minutes
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('vc_quiz_answers', JSON.stringify({}))
+        localStorage.setItem('vc_quiz_current', '0')
+        localStorage.setItem('vc_quiz_time_left', String(60 * 60))
+      }
     }
   }
 
+  // Time format function
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const remainingSeconds = seconds % 60
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
+    }
+
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+  }
+
   const q = questions[current]
-  const selected = answers[q.number]
+  const selected = q && answers[q.number]
 
   // Calculate percentage of questions answered
   const answeredCount = Object.keys(answers).length
   const progressPercentage = (answeredCount / questions.length) * 100
+
   // Animation variants for questions
   const questionVariants = {
     initial: { x: 50, opacity: 0 },
@@ -136,15 +177,16 @@ const Questions = () => {
     initial: { y: 20, opacity: 0 },
     animate: { y: 0, opacity: 1, transition: { duration: 0.3 } },
   }
-  // Format time function
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = seconds % 60
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
-  }
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className='flex items-center justify-center min-h-screen'>
+        <div className='text-center'>
+          <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto'></div>
+          <p className='mt-4 text-lg'>Loading quiz...</p>
+        </div>
+      </div>
+    )
   }
 
   if (!storedName && !showQuiz) {
@@ -173,8 +215,9 @@ const Questions = () => {
   }
 
   const correct = questions.filter((q) => answers[q.number] === q.answer).length
+
   return (
-    <Dialog open={storedName ? !showQuiz || submitted : showQuiz || submitted}>
+    <Dialog open={submitted || (storedName && showQuiz)}>
       <DialogContent className='w-[95%] md:w-[85%] lg:w-[75%] max-w-4xl mx-auto min-h-[200px] max-h-[85vh] overflow-y-auto p-4 md:p-6 lg:p-8'>
         {!submitted ? (
           <motion.div
@@ -188,7 +231,7 @@ const Questions = () => {
             <div className='mb-4'>
               <div className='flex justify-between items-center mb-2'>
                 <div className='flex items-center gap-2'>
-                  <CircleCheck className='h-5 w-5 text-primary' />
+                  <Clock className='h-5 w-5 text-primary' />
                   <span className='text-sm font-medium'>
                     Time Remaining: {formatTime(timeLeft)}
                   </span>
@@ -200,54 +243,63 @@ const Questions = () => {
               <Progress value={progressPercentage} className='h-2' />
             </div>
 
-            <DialogHeader>
-              <h2 className='text-2xl font-bold'>
-                {q.number < questions.length ? 'ASSESSMENT' : 'FINAL QUESTION'}
-              </h2>
-              <h2 className='text-lg font-semibold'>Question {q.number}</h2>
-              <p className='text-base md:text-lg whitespace-pre-wrap'>
-                {q.question}
-              </p>
-            </DialogHeader>
-            <motion.div
-              className='space-y-2'
-              variants={optionsContainerVariants}
-              initial='initial'
-              animate='animate'
-            >
-              {Object.entries(q.options).map(([key, text]) => (
-                <motion.div key={key} variants={optionVariants}>
-                  <Button
-                    variant={selected === key ? 'default' : 'outline'}
-                    className='w-full justify-start text-left whitespace-normal h-auto py-3'
-                    onClick={() => handleOption(key)}
-                  >
-                    {key}. {text}
-                  </Button>
-                </motion.div>
-              ))}
-            </motion.div>
-            <div className='flex justify-between mt-6'>
-              <Button
-                onClick={() => setCurrent(current - 1)}
-                disabled={current === 0}
-                variant='secondary'
-              >
-                Previous
-              </Button>
-              {current < questions.length - 1 ? (
-                <Button
-                  onClick={() => setCurrent(current + 1)}
-                  disabled={!selected}
+            {q && (
+              <>
+                <DialogHeader>
+                  <h2 className='text-2xl font-bold'>
+                    {q.number < questions.length
+                      ? 'ASSESSMENT'
+                      : 'FINAL QUESTION'}
+                  </h2>
+                  <h2 className='text-lg font-semibold'>Question {q.number}</h2>
+                  <p className='text-base md:text-lg whitespace-pre-wrap'>
+                    {q.question}
+                  </p>
+                </DialogHeader>
+
+                <motion.div
+                  className='space-y-2'
+                  variants={optionsContainerVariants}
+                  initial='initial'
+                  animate='animate'
                 >
-                  {q.number === 100 ? 'SUBMIT' : 'Next'}
-                </Button>
-              ) : (
-                <Button onClick={handleSubmit} disabled={!selected}>
-                  Submit
-                </Button>
-              )}
-            </div>
+                  {q.options &&
+                    Object.entries(q.options).map(([key, text]) => (
+                      <motion.div key={key} variants={optionVariants}>
+                        <Button
+                          variant={selected === key ? 'default' : 'outline'}
+                          className='w-full justify-start text-left whitespace-normal h-auto py-3'
+                          onClick={() => handleOption(key)}
+                        >
+                          {key}. {text}
+                        </Button>
+                      </motion.div>
+                    ))}
+                </motion.div>
+
+                <div className='flex justify-between mt-6'>
+                  <Button
+                    onClick={() => setCurrent(current - 1)}
+                    disabled={current === 0}
+                    variant='secondary'
+                  >
+                    Previous
+                  </Button>
+                  {current < questions.length - 1 ? (
+                    <Button
+                      onClick={() => setCurrent(current + 1)}
+                      disabled={!selected}
+                    >
+                      Next
+                    </Button>
+                  ) : (
+                    <Button onClick={handleSubmit} disabled={!selected}>
+                      Submit
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
           </motion.div>
         ) : (
           <motion.div
@@ -270,11 +322,9 @@ const Questions = () => {
               </p>
             )}
             <p>You have taken this quiz {assessmentCount} times.</p>
-            {correct < 70 ? (
-              <Button onClick={handleRetake} className='w-full'>
-                {correct >= 70 ? 'View Certificate' : ' Retake Assessment'}
-              </Button>
-            ) : null}
+            <Button onClick={handleRetake} className='w-full'>
+              {correct >= 70 ? 'View Certificate' : 'Retake Assessment'}
+            </Button>
           </motion.div>
         )}
       </DialogContent>

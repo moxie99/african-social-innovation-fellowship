@@ -449,7 +449,7 @@ export default function ModulePage() {
           whileHover={{ scale: 1.005 }}
           whileTap={{ scale: 0.95 }}
         >
-          {currentModuleIndex === modules.length - 1
+          {currentModuleIndex === modules.length - 1 && step === 3
             ? 'Take Assessments'
             : step === 3
               ? 'Next Module'
