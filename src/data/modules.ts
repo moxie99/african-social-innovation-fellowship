@@ -6,8 +6,10 @@ export const modules: Module[] = [
     id: 'Module 1',
     url: '/dashboard/courses/startup-founders-basics/module-1',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746390597/mod_1a_a3iuo4.jpg',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746390825/mod_1b_y51ri1.jpg',
     title:
       'MODULE 1: DREAM BIG, FUND SMART – INTRODUCTION TO VENTURE CAPITAL FOR AFRICAN FOUNDERS',
     section: '',
@@ -141,8 +143,10 @@ export const modules: Module[] = [
     url: '/dashboard/courses/startup-founders-basics/module-2',
     section: '',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746390895/mod_2a_ek1h6p.jpg',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746390944/mod_2b_biyjrs.jpg',
     title: 'MODULE 2: INSIDE A VC FIRM – DEALS,FEES & WHO CALLS THE SHOTS',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
@@ -302,8 +306,10 @@ Let’s say Startup A becomes wildly successful, offering healthcare solutions t
     url: '/dashboard/courses/startup-founders-basics/module-3',
     section: '',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746390993/mod_3a_cujcbt.jpg',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746391044/mod_3b_keyhou.jpg',
     title: 'MODULE 3:  The Ups and Downs of VC Funding;',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
@@ -525,8 +531,10 @@ Loss of Control
     id: 'Module 4',
     url: '/dashboard/courses/startup-founders-basics/module-4',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746391100/mod_4a_hzaecq.jpg',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746391149/mod_4b_sul08o.jpg',
     title: 'MODULE 4: VC FIRMS DECODED – STRATEGIES THAT BUILD UNICORNS',
     section: '',
     duration: '2 Weeks',
@@ -698,8 +706,10 @@ Whether through First Round’s community building, Benchmark’s concentrated a
     url: '/dashboard/courses/startup-founders-basics/module-5',
     section: '',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746391227/mod_5a_rcq4lj.png',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746391283/mod_5b_kwyil8.png',
     title: 'MODULE 5: VC JOURNEY SIMULATOR –FROM SEED TO EXIT',
     duration: '2 Weeks',
     Format: 'Text-Based Learning (Readings, Reflections, Quizzes, Assignments)',
@@ -897,8 +907,10 @@ Map your startup’s hypothetical funding path:`,
     id: 'Module 6',
     url: '/dashboard/courses/startup-founders-basics/module-6',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746391321/mod_6a_ltivit.jpg',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1746391374/mod_6b_y0esbx.png',
     title:
       'MODULE 6: LEVERAGED BUYOUTS (LBOS) –SCALING BUSINESSES WITH SMART DEBT',
     section: '',
@@ -1124,8 +1136,10 @@ Pick a real or hypothetical African business and outline an LBO plan:`,
     id: 'Module 7',
     url: '/dashboard/courses/startup-founders-basics/module-7',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044246/mod_7a_smhcqj.png',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044246/mod_8a_ewocth.png',
     title: `MODULE 7: PRIVATE EQUITY
 DECONSTRUCTED – FUNDS, FEES &
 FUTURE EMPIRES
@@ -1440,8 +1454,10 @@ Create a 1-page fund prospectus outlining:
     id: 'Module 8',
     url: '/dashboard/courses/startup-founders-basics/module-8',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044246/mod_8a_ewocth.png',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044254/mod_8b_lxmty4.png',
     title: 'MODULE 8: LBOs IN ACTION – AFRICAN CASE STUDIES & FUTURE PLAYBOOK',
     section: 'Section: Private Equity Strategies',
     duration: '2 Weeks',
@@ -1703,8 +1719,10 @@ The best LBOs don’t just extract value—they build legacies.
     id: 'Module 9',
     url: '/dashboard/courses/startup-founders-basics/module-9',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044252/mod_9a_ygqrq6.jpg',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044253/mod_9b_yrwluu.png',
     title: 'MODULE 9: SPACS UNLOCKED – THE FAST TRACK TO GOING PUBLIC',
     section: 'Section: Special Purpose Acquisition Companies (SPACs)',
     duration: '2 Weeks',
@@ -1944,8 +1962,10 @@ Imagine you’re launching a SPAC to acquire an African startup. Create a 1-page
     id: 'Module 10',
     url: '/dashboard/courses/startup-founders-basics/module-10',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044260/mod_10a_khbpat.jpg',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044251/mod_10b_bddlwj.jpg',
     title: `MODULE 10: SPAC CASE STUDY – HOW
 JUMIA REWROTE AFRICA’S TECH
 PLAYBOOK 
@@ -2200,8 +2220,10 @@ Compare two paths for a fictional African startup:
     id: 'Module 11',
     url: '/dashboard/courses/startup-founders-basics/module-11',
     icon: BookIcon,
-    imgUrl: '',
-    imgUrl2: '',
+    imgUrl:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044261/mod_11a_ketzan.jpg',
+    imgUrl2:
+      'https://res.cloudinary.com/beyondthenorm-educational-consortium/image/upload/v1747044255/mod_11b_o5potv.jpg',
     title: `MODULE 11: SPAC PITFALLS & POWER –
 LESSONS FROM WEJO’S COLLAPSE
 `,

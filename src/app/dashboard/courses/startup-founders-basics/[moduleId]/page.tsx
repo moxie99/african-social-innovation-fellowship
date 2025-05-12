@@ -81,6 +81,7 @@ export default function ModulePage() {
 
   // Function to go to next module
   const nextModule = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     if (step < steps.length - 1) {
       setStep(step + 1)
     } else {
@@ -111,16 +112,14 @@ export default function ModulePage() {
 
   // Function to go to previous module
   const previousModule = () => {
-    console.log('[[[[[]]]]]]666666')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     if (step > 0) {
       setStep(step - 1)
     } else {
-      console.log('[[[[[]]]]]]')
       if (currentModuleIndex > 0) {
         const prevModuleId = modules[currentModuleIndex - 1].id
           .toLowerCase()
           .replace(/\s+/g, '-')
-        console.log('====++++===++++uuuu', prevModuleId)
         router.push(
           `/dashboard/courses/startup-founders-basics/${prevModuleId}`
         )
@@ -212,36 +211,45 @@ export default function ModulePage() {
       </motion.div>
       <Separator className='my-4' />
       {/* Description Section */}
-      <motion.div variants={itemVariants}>
-        <p>
-          <span className='font-medium text-[#db4b2c]'>Description:</span>
-          {moduleData.description}
-        </p>
-      </motion.div>
+      {step === 0 && (
+        <>
+          <motion.div variants={itemVariants}>
+            <p>
+              <span className='font-medium text-[#db4b2c]'>Description:</span>
+              {moduleData.description}
+            </p>
+          </motion.div>
 
-      {/* Key Questions Section */}
-      <motion.div variants={itemVariants}>
-        <p className='font-bold mt-2 text-[#db4b2c]'>
-          Key Questions We&apos;ll Answer:
-        </p>
-        <motion.ul className='list-disc pl-5'>
-          {moduleData?.keyQuestions?.map((item, index) => (
-            <motion.li key={index} variants={listItemVariants} custom={index}>
-              {item}
-            </motion.li>
-          ))}
-        </motion.ul>
-        <div className='mt-4'>
-          <Image
-            src='https://images.unsplash.com/photo-1679621577331-4025252aa65b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8VkMlMjBGb3VuZGVyJTIwSW1hZ2VzfGVufDB8fDB8fHww'
-            alt='VC Founder'
-            width={900}
-            height={500}
-            className='rounded-lg object-cover w-full h-auto'
-          />
-        </div>
-      </motion.div>
-      <Separator className='my-4' />
+          {/* Key Questions Section */}
+          <motion.div variants={itemVariants}>
+            <p className='font-bold mt-2 text-[#db4b2c]'>
+              Key Questions We&apos;ll Answer:
+            </p>
+            <motion.ul className='list-disc pl-5'>
+              {moduleData?.keyQuestions?.map((item, index) => (
+                <motion.li
+                  key={index}
+                  variants={listItemVariants}
+                  custom={index}
+                >
+                  {item}
+                </motion.li>
+              ))}
+            </motion.ul>
+            <div className='mt-4'>
+              <Image
+                src={moduleData?.imgUrl}
+                alt='VC Founder'
+                width={900}
+                height={500}
+                className='rounded-lg object-cover w-full h-auto'
+              />
+            </div>
+          </motion.div>
+          <Separator className='my-4' />
+        </>
+      )}
+
       {/* Case Story Section */}
       {step === 0 && (
         <>
@@ -367,6 +375,15 @@ export default function ModulePage() {
               )}
             </motion.ul>
           </motion.div>
+          <div className='mt-4'>
+            <Image
+              src={moduleData?.imgUrl2}
+              alt='VC Founder'
+              width={900}
+              height={500}
+              className='rounded-lg object-cover w-full h-auto'
+            />
+          </div>
           <Separator className='my-4' />
         </>
       )}
@@ -404,17 +421,17 @@ export default function ModulePage() {
         variants={itemVariants}
         whileHover={{ scale: 1.002 }}
       >
-        {currentModuleIndex > 0 && (
-          <motion.button
-            onClick={previousModule}
-            className='px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-red-700 transition-colors'
-            disabled={currentModuleIndex === 0}
-            whileHover={{ scale: 1.005 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {step === 0 ? 'Previous Module' : 'Previous'}
-          </motion.button>
-        )}
+        {currentModuleIndex > 0 ||
+          (step > 0 && (
+            <motion.button
+              onClick={previousModule}
+              className='px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-red-700 transition-colors'
+              whileHover={{ scale: 1.005 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {step === 0 ? 'Previous Module' : 'Previous'}
+            </motion.button>
+          ))}
         {step === 3 && !isCompleted && (
           <motion.button
             onClick={handleCompleteModule}
