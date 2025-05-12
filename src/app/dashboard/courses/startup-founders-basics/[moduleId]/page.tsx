@@ -127,9 +127,6 @@ export default function ModulePage() {
       }
     }
   }
-
-  console.log('====+++++==!!!!!!=', currentModuleIndex, step)
-
   // Handle module completion
   const handleCompleteModule = () => {
     completeModule(moduleId)
@@ -141,7 +138,7 @@ export default function ModulePage() {
 
   return (
     <motion.div
-      className='relative max-w-4xl mx-auto px-4 py-6'
+      className='relative max-w-4xl mx-auto px-4 py-6 pb-32'
       variants={containerVariants}
       initial='hidden'
       animate='visible'
@@ -439,8 +436,8 @@ export default function ModulePage() {
           {currentModuleIndex === modules.length - 1
             ? 'Take Assessments'
             : step === 3
-            ? 'Next Module'
-            : 'Next'}
+              ? 'Next Module'
+              : 'Next'}
         </motion.button>
       </motion.div>
     </motion.div>
