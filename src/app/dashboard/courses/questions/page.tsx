@@ -217,7 +217,7 @@ const Questions = () => {
   const correct = questions.filter((q) => answers[q.number] === q.answer).length
 
   return (
-    <Dialog open={submitted || (storedName && showQuiz)}>
+    <Dialog open={submitted || (!!storedName && showQuiz)}>
       <DialogContent className='w-[95%] md:w-[85%] lg:w-[75%] max-w-4xl mx-auto min-h-[200px] max-h-[85vh] overflow-y-auto p-4 md:p-6 lg:p-8'>
         {!submitted ? (
           <motion.div
