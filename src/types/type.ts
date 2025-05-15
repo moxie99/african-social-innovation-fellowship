@@ -43,3 +43,18 @@ export type Module = {
   addResouces: string[]
   disscForPrompt: string[]
 }
+
+
+export interface UserData {
+  name: string
+  email: string
+  score: number
+  certificateDownloaded?: boolean
+  certificateDownloadDate?: string
+  examCode?: string
+  totalQuestions?: string | number
+  status?: string | number
+  attempts?: string | number
+  submittedAt: string
+  id?: string
+}

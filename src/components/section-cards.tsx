@@ -24,12 +24,11 @@ export function SectionCards() {
         <CardHeader className='relative'>
           <CardDescription>Course 1</CardDescription>
           <CardTitle className='@[250px]/card:text-3xl text-2xl font-semibold tabular-nums'>
-            Startup Founders
+            Startup Founder&apos;s Basic
           </CardTitle>
           <div className='absolute right-4 top-4'>
             <Badge variant='outline' className='flex gap-1 rounded-lg text-xs'>
               <TrendingUpIcon className='size-3' />
-              +12.5%
             </Badge>
           </div>
         </CardHeader>

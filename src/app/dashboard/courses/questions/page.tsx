@@ -11,9 +11,14 @@ import Confetti from 'react-confetti'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { useRouter } from 'next/navigation'
 import { Progress } from '@/components/ui/progress'
-import { Clock } from 'lucide-react'
+import { CheckCircle, Clock } from 'lucide-react'
+import { useUser } from '@clerk/nextjs'
+import { getAllUsers, sanitizeKey, setData } from '@/lib/operations'
+import { UserData } from '@/types/type'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const Questions = () => {
+  const { user } = useUser()
   const [username, setUsername] = useState('')
   const [storedName, setStoredName] = useState('')
   const [current, setCurrent] = useState(0)
@@ -22,14 +27,15 @@ const Questions = () => {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(true)
   const [assessmentCount, setAssessmentCount] = useState(0)
-
+  const [allUsers, setAllUsers] = useState<UserData[]>([])
+  const [message, setMessage] = useState<string>('')
+  const [status, setStatus] = useState<string>('')
   // Timer state - 60 minutes in seconds
   const [timeLeft, setTimeLeft] = useState(60 * 60)
 
   const router = useRouter()
   const { width, height } = useWindowSize()
 
-  // Load saved state from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedName = localStorage.getItem('vc_quiz_name')
@@ -99,58 +105,9 @@ const Questions = () => {
     []
   )
 
-  const handleOption = (letter: string) => {
-    setAnswers({ ...answers, [questions[current].number]: letter })
-  }
-
-  const handleSubmit = () => {
-    setSubmitted(true)
-    const newAssessmentCount = assessmentCount + 1
-    setAssessmentCount(newAssessmentCount)
-
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('vc_quiz_count', String(newAssessmentCount))
-    }
-  }
-
-  const handleRetake = () => {
-    const correct = questions.filter(
-      (q) => answers[q.number] === q.answer
-    ).length
-
-    if (correct >= 70) {
-      router.push('/dashboard/courses/certifcate')
-    } else {
-      // Reset quiz state
-      setAnswers({})
-      setCurrent(0)
-      setSubmitted(false)
-      setTimeLeft(60 * 60) // Reset timer to 60 minutes
-
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('vc_quiz_answers', JSON.stringify({}))
-        localStorage.setItem('vc_quiz_current', '0')
-        localStorage.setItem('vc_quiz_time_left', String(60 * 60))
-      }
-    }
-  }
-
-  // Time format function
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
-    const remainingSeconds = seconds % 60
-
-    if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-    }
-
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
-  }
-
   const q = questions[current]
   const selected = q && answers[q.number]
-
+  const correct = questions.filter((q) => answers[q.number] === q.answer).length
   // Calculate percentage of questions answered
   const answeredCount = Object.keys(answers).length
   const progressPercentage = (answeredCount / questions.length) * 100
@@ -178,6 +135,107 @@ const Questions = () => {
     animate: { y: 0, opacity: 1, transition: { duration: 0.3 } },
   }
 
+  const handleOption = (letter: string) => {
+    setAnswers({ ...answers, [questions[current].number]: letter })
+  }
+
+  const handleSubmit = () => {
+    setSubmitted(true)
+    const newAssessmentCount = assessmentCount + 1
+    setAssessmentCount(newAssessmentCount)
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('vc_quiz_count', String(newAssessmentCount))
+    }
+  }
+  const handleSetData = async () => {
+    const status = correct >= 70 ? 'passed' : 'failed'
+    try {
+      const sanitizedName = sanitizeKey(storedName)
+      const data: UserData = {
+        name: storedName,
+        email: user?.primaryEmailAddress?.emailAddress || '',
+        score: correct,
+        totalQuestions: questions.length,
+        status,
+        attempts: assessmentCount + 1,
+        submittedAt: new Date().toISOString(),
+      }
+      await setData(`quizResults/${sanitizedName}`, data)
+      setStatus('Success')
+      setMessage('Your data saved successfully')
+    } catch (error) {
+      console.error('Error creating user:', error)
+      setStatus('error')
+      setMessage('Error saving your data')
+    } finally {
+      setLoading(false)
+    }
+  }
+  const handleRetake = async () => {
+    const emailExists = allUsers.some(
+      (item) => item.email === user?.primaryEmailAddress?.emailAddress
+    )
+    const isCertificateDownloaded = allUsers.some(
+      (item) =>
+        item.email === user?.primaryEmailAddress?.emailAddress &&
+        item.certificateDownloaded
+    )
+
+    if (!emailExists) handleSetData()
+    if (correct >= 70 && !isCertificateDownloaded) {
+      router.push('/dashboard/courses/certificate')
+    } else {
+      // Reset quiz state
+      setStatus('error')
+      setMessage(
+        'Congratulations! You have once been certified for this course'
+      )
+      setAnswers({})
+      setCurrent(0)
+      setSubmitted(false)
+      setTimeLeft(60 * 60)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('vc_quiz_answers', JSON.stringify({}))
+        localStorage.setItem('vc_quiz_current', '0')
+        localStorage.setItem('vc_quiz_time_left', String(60 * 60))
+      }
+    }
+  }
+
+  // Fetch all users from the database
+  const fetchAllUsers = async () => {
+    setLoading(true)
+    try {
+      const users = await getAllUsers()
+      setAllUsers(users)
+    } catch (error) {
+      console.error('Error fetching all users:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Load all users when component mounts
+  useEffect(() => {
+    fetchAllUsers()
+  }, [])
+
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const remainingSeconds = seconds % 60
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds
+        .toString()
+        .padStart(2, '0')}`
+    }
+
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+  }
+
+  console.log(allUsers)
   if (loading) {
     return (
       <div className='flex items-center justify-center min-h-screen'>
@@ -213,122 +271,148 @@ const Questions = () => {
       </motion.div>
     )
   }
-
-  const correct = questions.filter((q) => answers[q.number] === q.answer).length
-
   return (
-    <Dialog open={submitted || (!!storedName && showQuiz)}>
-      <DialogContent className='w-[95%] md:w-[85%] lg:w-[75%] max-w-4xl mx-auto min-h-[200px] max-h-[85vh] overflow-y-auto p-4 md:p-6 lg:p-8'>
-        {!submitted ? (
-          <motion.div
-            key={current}
-            variants={questionVariants}
-            initial='initial'
-            animate='animate'
-            exit='exit'
-            className='space-y-4'
-          >
-            <div className='mb-4'>
-              <div className='flex justify-between items-center mb-2'>
-                <div className='flex items-center gap-2'>
-                  <Clock className='h-5 w-5 text-primary' />
+    <>
+      {status && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+        >
+          <Alert className='fixed top-4 right-4 w-auto max-w-md bg-green-50 border-green-200 z-50'>
+            <CheckCircle
+              className={`h-4 w-4 ${
+                status === 'Success'
+                  ? 'text-green-500'
+                  : status === 'Error'
+                  ? 'text-red-500'
+                  : ''
+              }`}
+            />
+            <AlertTitle>
+              {status === 'Success' ? 'Success!' : 'Error'}{' '}
+            </AlertTitle>
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
+        </motion.div>
+      )}
+      <Dialog open={submitted || (!!storedName && showQuiz)}>
+        <DialogContent className='w-[95%] md:w-[85%] lg:w-[75%] max-w-4xl mx-auto min-h-[200px] max-h-[85vh] overflow-y-auto p-4 md:p-6 lg:p-8'>
+          {!submitted ? (
+            <motion.div
+              key={current}
+              variants={questionVariants}
+              initial='initial'
+              animate='animate'
+              exit='exit'
+              className='space-y-4'
+            >
+              <div className='mb-4'>
+                <div className='flex justify-between items-center mb-2'>
+                  <div className='flex items-center gap-2'>
+                    <Clock className='h-5 w-5 text-primary' />
+                    <span className='text-sm font-medium'>
+                      Time Remaining: {formatTime(timeLeft)}
+                    </span>
+                  </div>
                   <span className='text-sm font-medium'>
-                    Time Remaining: {formatTime(timeLeft)}
+                    {answeredCount}/{questions.length} completed
                   </span>
                 </div>
-                <span className='text-sm font-medium'>
-                  {answeredCount}/{questions.length} completed
-                </span>
+                <Progress value={progressPercentage} className='h-2' />
               </div>
-              <Progress value={progressPercentage} className='h-2' />
-            </div>
 
-            {q && (
-              <>
-                <DialogHeader>
-                  <h2 className='text-2xl font-bold'>
-                    {q.number < questions.length
-                      ? 'ASSESSMENT'
-                      : 'FINAL QUESTION'}
-                  </h2>
-                  <h2 className='text-lg font-semibold'>Question {q.number}</h2>
-                  <p className='text-base md:text-lg whitespace-pre-wrap'>
-                    {q.question}
-                  </p>
-                </DialogHeader>
+              {q && (
+                <>
+                  <DialogHeader>
+                    <h2 className='text-2xl font-bold'>
+                      {q.number < questions.length
+                        ? 'ASSESSMENT'
+                        : 'FINAL QUESTION'}
+                    </h2>
+                    <h2 className='text-lg font-semibold'>
+                      Question {q.number}
+                    </h2>
+                    <p className='text-base md:text-lg whitespace-pre-wrap'>
+                      {q.question}
+                    </p>
+                  </DialogHeader>
 
-                <motion.div
-                  className='space-y-2'
-                  variants={optionsContainerVariants}
-                  initial='initial'
-                  animate='animate'
-                >
-                  {q.options &&
-                    Object.entries(q.options).map(([key, text]) => (
-                      <motion.div key={key} variants={optionVariants}>
-                        <Button
-                          variant={selected === key ? 'default' : 'outline'}
-                          className='w-full justify-start text-left whitespace-normal h-auto py-3'
-                          onClick={() => handleOption(key)}
-                        >
-                          {key}. {text}
-                        </Button>
-                      </motion.div>
-                    ))}
-                </motion.div>
-
-                <div className='flex justify-between mt-6'>
-                  <Button
-                    onClick={() => setCurrent(current - 1)}
-                    disabled={current === 0}
-                    variant='secondary'
+                  <motion.div
+                    className='space-y-2'
+                    variants={optionsContainerVariants}
+                    initial='initial'
+                    animate='animate'
                   >
-                    Previous
-                  </Button>
-                  {current < questions.length - 1 ? (
+                    {q.options &&
+                      Object.entries(q.options).map(([key, text]) => (
+                        <motion.div key={key} variants={optionVariants}>
+                          <Button
+                            variant={selected === key ? 'default' : 'outline'}
+                            className='w-full justify-start text-left whitespace-normal h-auto py-3'
+                            onClick={() => handleOption(key)}
+                          >
+                            {key}. {text}
+                          </Button>
+                        </motion.div>
+                      ))}
+                  </motion.div>
+
+                  <div className='flex justify-between mt-6'>
                     <Button
-                      onClick={() => setCurrent(current + 1)}
-                      disabled={!selected}
+                      onClick={() => setCurrent(current - 1)}
+                      disabled={current === 0}
+                      variant='secondary'
                     >
-                      Next
+                      Previous
                     </Button>
-                  ) : (
-                    <Button onClick={handleSubmit} disabled={!selected}>
-                      Submit
-                    </Button>
-                  )}
-                </div>
-              </>
-            )}
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className='text-center space-y-4'
-          >
-            <Confetti width={width} height={height} recycle={false} />
-            <h2 className='text-xl font-semibold'>Quiz Completed!</h2>
-            <p>Thank you, {storedName}. Your responses have been recorded.</p>
-            <p>
-              Score: {correct} / {questions.length}
-            </p>
-            {correct >= 70 ? (
-              <p>🎉 You passed! Click button below to view your certificate</p>
-            ) : (
+                    {current < questions.length - 1 ? (
+                      <Button
+                        onClick={() => setCurrent(current + 1)}
+                        disabled={!selected}
+                      >
+                        Next
+                      </Button>
+                    ) : (
+                      <Button onClick={handleSubmit} disabled={!selected}>
+                        Submit
+                      </Button>
+                    )}
+                  </div>
+                </>
+              )}
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className='text-center space-y-4'
+            >
+              <Confetti width={width} height={height} recycle={false} />
+              <h2 className='text-xl font-semibold'>Quiz Completed!</h2>
+              <p>Thank you, {storedName}. Your responses have been recorded.</p>
               <p>
-                😢 You did not meet the passing mark. Please retake the quiz.
+                Score: {correct} / {questions.length}
               </p>
-            )}
-            <p>You have taken this quiz {assessmentCount} times.</p>
-            <Button onClick={handleRetake} className='w-full'>
-              {correct >= 70 ? 'View Certificate' : 'Retake Assessment'}
-            </Button>
-          </motion.div>
-        )}
-      </DialogContent>
-    </Dialog>
+              {correct >= 70 ? (
+                <p>
+                  🎉 You passed! Click button below to view your certificate
+                </p>
+              ) : (
+                <p>
+                  😢 You did not meet the passing mark. Please retake the quiz.
+                </p>
+              )}
+              <p>You have taken this quiz {assessmentCount} times.</p>
+              <Button onClick={handleRetake} className='w-full'>
+                {correct >= 70 ? 'View Certificate' : 'Retake Assessment'}
+              </Button>
+            </motion.div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 

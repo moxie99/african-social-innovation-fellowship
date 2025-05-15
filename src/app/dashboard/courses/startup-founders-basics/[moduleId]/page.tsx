@@ -214,8 +214,8 @@ export default function ModulePage() {
       {step === 0 && (
         <>
           <motion.div variants={itemVariants}>
-            <p>
-              <span className='font-medium text-[#db4b2c]'>Description:</span>
+            <p className='text-[19px]'>
+              <span className='text-[#db4b2c]'>Description:</span>
               {moduleData.description}
             </p>
           </motion.div>
@@ -231,6 +231,7 @@ export default function ModulePage() {
                   key={index}
                   variants={listItemVariants}
                   custom={index}
+                  className='text-[19px]'
                 >
                   {item}
                 </motion.li>
@@ -263,7 +264,7 @@ export default function ModulePage() {
                   key !== 'heading' && (
                     <motion.p
                       key={index}
-                      className='mb-6 text-[19px]'
+                      className='mb-6 text-[19px] italic'
                       variants={itemVariants}
                       custom={index}
                     >
@@ -452,8 +453,8 @@ export default function ModulePage() {
           {currentModuleIndex === modules.length - 1 && step === 3
             ? 'Take Assessments'
             : step === 3
-              ? 'Next Module'
-              : 'Next'}
+            ? 'Next Module'
+            : 'Next'}
         </motion.button>
       </motion.div>
     </motion.div>
