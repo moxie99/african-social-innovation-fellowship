@@ -23,6 +23,7 @@ const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
   const [loading, setLoading] = useState(false)
 
   const seal = '/assets/seal.png'
+  const logo = '/assets/Logo.png'
   const currentDate = format(new Date(), 'MMMM dd, yyyy')
   // Generate the exam code on the client-side only to avoid hydration mismatch
   useEffect(() => {
@@ -181,7 +182,7 @@ const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
         </div>
 
         {/* Footer */}
-        <div className='flex flex-wrap justify-between items-end mt-4 px-8'>
+        <div className='flex flex-wrap justify-between items-center mt-4 px-8'>
           {/* Signature */}
           <div className='mb-4'>
             <div
@@ -216,11 +217,18 @@ const CertificateGenerator: React.FC<CertificateGeneratorProps> = ({
               <div className='font-bold'>EXAM. CODE: {examCode}</div>
             </div>
           </div>
-          <div className='mb-4'>
-            <h1 className='text-red-700 font-extrabold text-7xl md:text-9xl'>
-              asif.
-            </h1>
-            <h6>AFRICAN SOCIAL INNOVATION FELLOWSHIP</h6>
+          <div className='w-[100px] h-[100px] mb-4'>
+            {logo && (
+              <Image
+                alt='log0'
+                src={logo}
+                height={80}
+                width={80}
+                unoptimized
+                priority
+                className='mt-4'
+              />
+            )}
           </div>
         </div>
         <div className='w-full h-[10px] bg-red-700 mt-4' />
