@@ -1,8 +1,7 @@
 'use client'
-import { CheckCircle, TrendingUpIcon } from 'lucide-react'
+import { TrendingUpIcon } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
-import { motion } from 'framer-motion'
 import {
   Card,
   CardDescription,
@@ -12,7 +11,6 @@ import {
 } from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { toast } from "sonner"
 
 export function SectionCards() {

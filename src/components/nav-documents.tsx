@@ -64,20 +64,20 @@ export function NavDocuments({ items }: { items: Document[] }) {
 
     return 'text-gray-400'
   }
-  const handleModuleClick = (
-    e: React.MouseEvent,
-    moduleId: string,
-    url: string
-  ) => {
-    const normalizedId = moduleId.toLowerCase().replace(/\s+/g, '-')
+  // const handleModuleClick = (
+  //   e: React.MouseEvent,
+  //   moduleId: string,
+  //   url: string
+  // ) => {
+  //   const normalizedId = moduleId.toLowerCase().replace(/\s+/g, '-')
 
-    if (!canAccessModule(normalizedId)) {
-      e.preventDefault()
-      return
-    }
+  //   if (!canAccessModule(normalizedId)) {
+  //     e.preventDefault()
+  //     return
+  //   }
 
-    router.push(url)
-  }
+  //   router.push(url)
+  // }
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
       <SidebarGroupLabel>Courses</SidebarGroupLabel>
