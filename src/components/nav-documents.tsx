@@ -35,7 +35,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useModuleProgress } from '@/context/ModuleProgressContext'
 import { Module } from '@/types/type'
-
+import {toast} from "sonner"
 interface Document {
   name: string
   url: string
@@ -179,9 +179,10 @@ export function NavDocuments({ items }: { items: Document[] }) {
                               }`}
                             >
                               <div
-                                onClick={(e) =>
-                                  handleModuleClick(e, moduleId, module.url)
-                                }
+                                // onClick={(e) =>
+                                //   handleModuleClick(e, moduleId, module.url)
+                                // }
+                                onClick={() => toast.error("Course not available yet")}
                                 className='flex items-center gap-2'
                               >
                                 <module.icon className='h-4 w-4' />
