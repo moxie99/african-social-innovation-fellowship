@@ -153,7 +153,7 @@ const Basics = () => {
   }
 
   const handleSetData = async () => {
-    const status = correct >= 20 ? 'passed' : 'failed'
+    const status = correct >= 26 ? 'passed' : 'failed'
     try {
       const sanitizedName = sanitizeKey(storedName)
       const data: UserData = {
@@ -181,7 +181,7 @@ const Basics = () => {
       (item) => item.email === user?.primaryEmailAddress?.emailAddress
     )
     if (!emailExists) handleSetData()
-    if (correct >= 20) {
+    if (correct >= 26) {
       router.push('/')
     } else {
       // Reset quiz state
@@ -190,12 +190,14 @@ const Basics = () => {
       setAnswers({})
       setCurrent(0)
       setSubmitted(false)
-      setTimeLeft(3 * 60)
       if (typeof window !== 'undefined') {
         localStorage.setItem('vc_quiz_answers', JSON.stringify({}))
+        localStorage.setItem('vc_had_assessment', 'true')
         localStorage.setItem('vc_quiz_current', '0')
         localStorage.setItem('vc_quiz_time_left', String(3 * 60))
+        localStorage.setItem("vc_quiz_name","")
       }
+      router.push("/")
     }
   }
 
@@ -375,9 +377,13 @@ const Basics = () => {
                   </div>
                   <DialogFooter className='sm:justify-start'>
                     <DialogClose asChild>
-                      <Button onClick={() => {
-                        router.push("/")
-                      }} type='button' variant='secondary'>
+                      <Button
+                        onClick={() => {
+                          router.push('/')
+                        }}
+                        type='button'
+                        variant='secondary'
+                      >
                         Close
                       </Button>
                     </DialogClose>
@@ -411,11 +417,14 @@ const Basics = () => {
               )}
               <p>You have taken this quiz {assessmentCount} times.</p>
               <Button onClick={handleRetake} className='w-full'>
-                {correct >= 20 ? 'Home' : 'Retake Assessment'}
+                Go Home
               </Button>
-              <Button className="w-full" onClick={()=> {
-                router.push("/")
-              }}>
+              <Button
+                className='w-full'
+                onClick={() => {
+                  router.push('/')
+                }}
+              >
                 Close
               </Button>
             </motion.div>
