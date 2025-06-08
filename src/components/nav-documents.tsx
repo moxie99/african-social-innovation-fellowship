@@ -35,7 +35,6 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useModuleProgress } from '@/context/ModuleProgressContext'
 import { Module } from '@/types/type'
-import {toast} from "sonner"
 interface Document {
   name: string
   url: string
