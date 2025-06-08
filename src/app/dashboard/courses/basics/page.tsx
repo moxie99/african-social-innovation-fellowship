@@ -1,6 +1,12 @@
 'use client'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from '@/components/ui/dialog'
 import { getRandomQuestionsRenumbered } from '@/helpers/randomQuestions'
 import { UserData } from '@/types/type'
 import { useUser } from '@clerk/nextjs'
@@ -29,7 +35,7 @@ const Basics = () => {
   const [message, setMessage] = useState<string>('')
   const [status, setStatus] = useState<string>('')
   // Timer state - 60 minutes in seconds
-  const [timeLeft, setTimeLeft] = useState(20 * 60)
+  const [timeLeft, setTimeLeft] = useState(3 * 60)
 
   const router = useRouter()
   const { width, height } = useWindowSize()
@@ -50,7 +56,7 @@ const Basics = () => {
       if (savedCurrent) setCurrent(Number(savedCurrent))
       if (savedAssessmentCount) setAssessmentCount(Number(savedAssessmentCount))
       if (savedTimeLeft) setTimeLeft(Number(savedTimeLeft))
-      else setTimeLeft(20 * 60) // Reset to 60 minutes if no saved time
+      else setTimeLeft(3 * 60) // Reset to 60 minutes if no saved time
 
       setLoading(false)
     }
@@ -88,11 +94,11 @@ const Basics = () => {
   const handleStart = () => {
     setStoredName(username)
     setShowQuiz(true)
-    setTimeLeft(20 * 60) // Reset timer to 60 minutes
+    setTimeLeft(3 * 60) // Reset timer to 60 minutes
 
     if (typeof window !== 'undefined') {
       localStorage.setItem('vc_quiz_name', username)
-      localStorage.setItem('vc_quiz_time_left', String(20 * 60))
+      localStorage.setItem('vc_quiz_time_left', String(3 * 60))
     }
   }
 
@@ -180,17 +186,15 @@ const Basics = () => {
     } else {
       // Reset quiz state
       setStatus('error')
-      setMessage(
-        "It's good you are trying out again"
-      )
+      setMessage("It's good you are trying out again")
       setAnswers({})
       setCurrent(0)
       setSubmitted(false)
-      setTimeLeft(20 * 60)
+      setTimeLeft(3 * 60)
       if (typeof window !== 'undefined') {
         localStorage.setItem('vc_quiz_answers', JSON.stringify({}))
         localStorage.setItem('vc_quiz_current', '0')
-        localStorage.setItem('vc_quiz_time_left', String(20 * 60))
+        localStorage.setItem('vc_quiz_time_left', String(3 * 60))
       }
     }
   }
@@ -297,7 +301,7 @@ const Basics = () => {
               exit='exit'
               className='space-y-4'
             >
-              <div className='mb-4'>
+              <div className='mb-4 mt-3'>
                 <div className='flex justify-between items-center mb-2'>
                   <div className='flex items-center gap-2'>
                     <Clock className='h-5 w-5 text-primary' />
@@ -369,6 +373,15 @@ const Basics = () => {
                       </Button>
                     )}
                   </div>
+                  <DialogFooter className='sm:justify-start'>
+                    <DialogClose asChild>
+                      <Button onClick={() => {
+                        router.push("/")
+                      }} type='button' variant='secondary'>
+                        Close
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
                 </>
               )}
             </motion.div>
@@ -387,16 +400,23 @@ const Basics = () => {
               </p>
               {correct >= 20 ? (
                 <p>
-                  🎉 You did well! and can do much better. Please watch this space for our course launch.
+                  🎉 You did well! and can do much better. Please watch this
+                  space for our course launch.
                 </p>
               ) : (
                 <p>
-                  😢 You did well but there is still a knowledge gap to fill. Please watch this space for our course launch.
+                  😢 You did well but there is still a knowledge gap to fill.
+                  Please watch this space for our course launch.
                 </p>
               )}
               <p>You have taken this quiz {assessmentCount} times.</p>
               <Button onClick={handleRetake} className='w-full'>
                 {correct >= 20 ? 'Home' : 'Retake Assessment'}
+              </Button>
+              <Button className="w-full" onClick={()=> {
+                router.push("/")
+              }}>
+                Close
               </Button>
             </motion.div>
           )}

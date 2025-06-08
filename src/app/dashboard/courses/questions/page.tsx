@@ -186,7 +186,6 @@ const Questions = () => {
     if (correct >= 70 && !isCertificateDownloaded) {
       router.push('/dashboard/courses/certificate')
     } else {
-      // Reset quiz state
       setStatus('error')
       setMessage(
         'Congratulations! You have once been certified for this course'
@@ -197,9 +196,11 @@ const Questions = () => {
       setTimeLeft(60 * 60)
       if (typeof window !== 'undefined') {
         localStorage.setItem('vc_quiz_answers', JSON.stringify({}))
+        localStorage.setItem("vc_quiz_name", "")
         localStorage.setItem('vc_quiz_current', '0')
         localStorage.setItem('vc_quiz_time_left', String(60 * 60))
       }
+      router.push("/")
     }
   }
 
